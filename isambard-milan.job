@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q milanq
+#PBS -l select=1:ncpus=128
+#PBS -l walltime=00:30:00
+#PBS -l place=excl
+#PBS -joe
+
+#export CPATH="/usr/lib/gcc/x86_64-redhat-linux/8/include:${CPATH:-}"
+
+# export CPATH="/lustre/projects/bristol/modules/gcc/12.1.0/lib/gcc/x86_64-pc-linux-gnu/12.1.0/include:${CPATH:-}"
+
+_rtb_extra_flags() {
+  case "$RTB_CXX" in
+  *clang\+\+ | *clang) echo "--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0" ;;
+  *) echo "" ;;
+  esac
+}
