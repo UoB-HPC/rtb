@@ -1,0 +1,49 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-10-20200105-e9c6bb4/opt/gcc-10+2020-01-05Z+e9c6bb4
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-10-20200105-e9c6bb4/opt/gcc-10+2020-01-05Z+e9c6bb4/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-10-20200105-e9c6bb4/opt/gcc-10+2020-01-05Z+e9c6bb4/bin/../libexec/gcc/x86_64-pc-linux-gnu/10.0.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-10+2020-01-05Z+e9c6bb4 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 10.0.0 20200105 (experimental) (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-10-20200105-e9c6bb4/opt/gcc-10+2020-01-05Z+e9c6bb4/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-10-20200105-e9c6bb4/opt/gcc-10+2020-01-05Z+e9c6bb4/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+Repo: /tmp/rtb/gcc-10-20200105-e9c6bb4/repo
+# run 1
+++ /tmp/rtb/gcc-10-20200105-e9c6bb4/opt/gcc-10+2020-01-05Z+e9c6bb4/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/omp /tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp
+/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp: In function ‘Result evaluate(const Params&, const Sample&, bool)’:
+/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp:404:109: error: incorrect sharing of tree nodes
+  404 |   return {valid, maxDiffPct, s, SummaryStats<double>(msWithoutWarmup), gflops, gfinsts, interactions_per_sec};
+      |                                                                                                             ^
+*<retval>
+<retval>->maxDiffPct = _95;
+/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp:404:109: error: incorrect sharing of tree nodes
+*<retval>
+<retval>->gflops = gflops;
+/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp:404:109: error: incorrect sharing of tree nodes
+*<retval>
+<retval>->ginsts = gfinsts;
+/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp:404:109: error: incorrect sharing of tree nodes
+*<retval>
+<retval>->interactionsPerSec = interactions_per_sec;
+during GIMPLE pass: cfg
+/tmp/rtb/gcc-10-20200105-e9c6bb4/repo/src/main.cpp:404:109: internal compiler error: verify_gimple failed
+0xfb92ca verify_gimple_in_cfg(function*, bool)
+	../../gcc/tree-cfg.c:5445
+0xea07af execute_function_todo
+	../../gcc/passes.c:1983
+0xea15f3 do_per_function
+	../../gcc/passes.c:1638
+0xea15f3 execute_todo
+	../../gcc/passes.c:2037
+Please submit a full bug report,
+with preprocessed source if appropriate.
+Please include the complete backtrace with any bug report.
+See <https://gcc.gnu.org/bugs/> for instructions.
+{"realS":1.328,"userS":1.265,"systemS":0.059}
+# PBS output

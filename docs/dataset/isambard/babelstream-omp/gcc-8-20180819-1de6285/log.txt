@@ -1,0 +1,36 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/../libexec/gcc/x86_64-pc-linux-gnu/8.2.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-8+2018-08-19Z+1de6285 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+gcc version 8.2.1 20180819 (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+Repo: /tmp/rtb/gcc-8-20180819-1de6285/repo
+# run 1
+++ /tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/ -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/main.cpp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp/OMPStream.cpp
+# run 2
+++ /tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/ -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/main.cpp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp/OMPStream.cpp
+# run 3
+++ /tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/ -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/main.cpp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp/OMPStream.cpp
+# run 4
+++ /tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/ -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/main.cpp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp/OMPStream.cpp
+# run 5
+++ /tmp/rtb/gcc-8-20180819-1de6285/opt/gcc-8+2018-08-19Z+1de6285/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/ -I/tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/main.cpp /tmp/rtb/gcc-8-20180819-1de6285/repo/src/omp/OMPStream.cpp
+# check
+	linux-vdso.so.1 (0x00007ffe87913000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x000014f50ed26000)
+	libm.so.6 => /lib64/libm.so.6 (0x000014f50e9a4000)
+	libgomp.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgomp.so.1 (0x000014f50e766000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x000014f50e54e000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x000014f50e32e000)
+	libc.so.6 => /lib64/libc.so.6 (0x000014f50df6b000)
+	/lib64/ld-linux-x86-64.so.2 (0x000014f50f0f6000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x000014f50dd67000)
+# PBS output

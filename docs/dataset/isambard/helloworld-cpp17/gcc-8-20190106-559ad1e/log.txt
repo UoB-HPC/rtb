@@ -1,0 +1,32 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/../libexec/gcc/x86_64-pc-linux-gnu/8.2.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-8+2019-01-06Z+559ad1e --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+gcc version 8.2.1 20190106 (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+# run 1
+++ /tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 2
+++ /tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 3
+++ /tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 4
+++ /tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 5
+++ /tmp/rtb/gcc-8-20190106-559ad1e/opt/gcc-8+2019-01-06Z+559ad1e/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# check
+	linux-vdso.so.1 (0x00007fff9195a000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x0000147f97057000)
+	libm.so.6 => /lib64/libm.so.6 (0x0000147f96cd5000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x0000147f96abd000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000147f966fa000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000147f97427000)
+# PBS output

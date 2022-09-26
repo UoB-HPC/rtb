@@ -1,0 +1,65 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/bin/../libexec/gcc/x86_64-pc-linux-gnu/8.0.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-8+2017-05-14Z+eac8c9f --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+gcc version 8.0.0 20170514 (experimental) (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+Repo: /tmp/rtb/gcc-8-20170514-eac8c9f/repo
+# run 1
+++ /tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/omp /tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp
+In file included from /tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:77:0:
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp: In lambda function:
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/omp/fasten.hpp:13:18: error: parameter packs not expanded with ‘...’:
+ #define IMPL_CLS OmpBude
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:492:102: note: in expansion of macro ‘IMPL_CLS’
+                                                                                          auto bude = IMPL_CLS<Ns>();
+                                                                                                      ^~~~~~~~
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/omp/fasten.hpp:13:18: note:         ‘Ns’
+ #define IMPL_CLS OmpBude
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:492:102: note: in expansion of macro ‘IMPL_CLS’
+                                                                                          auto bude = IMPL_CLS<Ns>();
+                                                                                                      ^~~~~~~~
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp: In lambda function:
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/omp/fasten.hpp:13:18: error: parameter packs not expanded with ‘...’:
+ #define IMPL_CLS OmpBude
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:499:22: note: in expansion of macro ‘IMPL_CLS’
+          auto bude = IMPL_CLS<Ns>();
+                      ^~~~~~~~
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/omp/fasten.hpp:13:18: note:         ‘Ns’
+ #define IMPL_CLS OmpBude
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:499:22: note: in expansion of macro ‘IMPL_CLS’
+          auto bude = IMPL_CLS<Ns>();
+                      ^~~~~~~~
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp: In instantiation of ‘bool run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]’:
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:650:46:   required from here
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:491:74: error: could not convert ‘{{1, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {2, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {4, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {8, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {16, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {32, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {64, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}, {128, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda()>{}}}’ from ‘<brace-enclosed initializer list>’ to ‘std::unordered_map<long unsigned int, std::function<const std::vector<std::pair<long unsigned int, std::__cxx11::basic_string<char> > >()> >’
+   std::unordered_map<size_t, std::function<const std::vector<Device>()>> enumerate = {{Ns, []() {
+                                                                          ^~~~~~~~~
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+       {Ns, [&p](size_t wgsize, size_t device) {
+            ^
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:498:12: error: member ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>::<p capture>’ is uninitialized reference
+/tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:496:75: error: could not convert ‘{{1, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{(* & p)}}, {2, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}, {4, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}, {8, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}, {16, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}, {32, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}, {64, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}, {128, <lambda closure object>run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(size_t, size_t)>{}}}’ from ‘<brace-enclosed initializer list>’ to ‘std::unordered_map<long unsigned int, std::function<const Sample(long unsigned int, long unsigned int)> >’
+   std::unordered_map<size_t, std::function<const Sample(size_t, size_t)>> kernel = {
+                                                                           ^~~~~~
+In file included from /tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/include/c++/8.0.0/functional:64:0,
+                 from /tmp/rtb/gcc-8-20170514-eac8c9f/repo/src/main.cpp:9:
+/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/include/c++/8.0.0/bits/stl_algo.h: At global scope:
+/tmp/rtb/gcc-8-20170514-eac8c9f/opt/gcc-8+2017-05-14Z+eac8c9f/include/c++/8.0.0/bits/stl_algo.h:508:5: error: ‘bool std::all_of(_IIter, _IIter, _Predicate) [with _IIter = __gnu_cxx::__normal_iterator<Result*, std::vector<Result> >; _Predicate = run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(auto:15&)>]’, declared using local type ‘run(const Params&, const std::vector<long unsigned int>&, const std::vector<long unsigned int>&) [with long unsigned int ...Ns = {1, 2, 4, 8, 16, 32, 64, 128}]::<lambda(auto:15&)>’, is used but never defined [-fpermissive]
+     all_of(_InputIterator __first, _InputIterator __last, _Predicate __pred)
+     ^~~~~~
+{"realS":0.894,"userS":0.855,"systemS":0.036}
+# PBS output

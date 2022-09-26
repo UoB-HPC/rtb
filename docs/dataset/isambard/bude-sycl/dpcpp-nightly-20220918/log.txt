@@ -1,0 +1,8 @@
+# restore fixture
+# prime
+tar: This does not look like a tar archive
+
+gzip: stdin: not in gzip format
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+# PBS output

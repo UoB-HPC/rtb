@@ -1,0 +1,33 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/../libexec/gcc/x86_64-pc-linux-gnu/10.1.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-10+2020-06-07Z+ac9b053 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 10.1.1 20200607 (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+# run 1
+++ /tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 2
+++ /tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 3
+++ /tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 4
+++ /tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 5
+++ /tmp/rtb/gcc-10-20200607-ac9b053/opt/gcc-10+2020-06-07Z+ac9b053/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# check
+	linux-vdso.so.1 (0x00007ffca21ed000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x000015265d4bc000)
+	libm.so.6 => /lib64/libm.so.6 (0x000015265d13a000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x000015265cf22000)
+	libc.so.6 => /lib64/libc.so.6 (0x000015265cb5f000)
+	/lib64/ld-linux-x86-64.so.2 (0x000015265d88c000)
+# PBS output

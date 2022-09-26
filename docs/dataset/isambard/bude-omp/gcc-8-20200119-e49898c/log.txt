@@ -1,0 +1,36 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/../libexec/gcc/x86_64-pc-linux-gnu/8.3.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-8+2020-01-19Z+e49898c --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+gcc version 8.3.1 20200119 (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+Repo: /tmp/rtb/gcc-8-20200119-e49898c/repo
+# run 1
+++ /tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-8-20200119-e49898c/repo/src/omp /tmp/rtb/gcc-8-20200119-e49898c/repo/src/main.cpp
+# run 2
+++ /tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-8-20200119-e49898c/repo/src/omp /tmp/rtb/gcc-8-20200119-e49898c/repo/src/main.cpp
+# run 3
+++ /tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-8-20200119-e49898c/repo/src/omp /tmp/rtb/gcc-8-20200119-e49898c/repo/src/main.cpp
+# run 4
+++ /tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-8-20200119-e49898c/repo/src/omp /tmp/rtb/gcc-8-20200119-e49898c/repo/src/main.cpp
+# run 5
+++ /tmp/rtb/gcc-8-20200119-e49898c/opt/gcc-8+2020-01-19Z+e49898c/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-8-20200119-e49898c/repo/src/omp /tmp/rtb/gcc-8-20200119-e49898c/repo/src/main.cpp
+# check
+	linux-vdso.so.1 (0x00007ffd467b8000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x000014a11b74c000)
+	libm.so.6 => /lib64/libm.so.6 (0x000014a11b3ca000)
+	libgomp.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgomp.so.1 (0x000014a11b18c000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x000014a11af74000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x000014a11ad54000)
+	libc.so.6 => /lib64/libc.so.6 (0x000014a11a991000)
+	/lib64/ld-linux-x86-64.so.2 (0x000014a11bb1c000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x000014a11a78d000)
+# PBS output

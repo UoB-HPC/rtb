@@ -1,0 +1,38 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a
+clang version 10.0.0 (https://github.com/llvm/llvm-project.git f85d63a558364dcf57efe7b37b3e99b7fd91fd5c)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin
+Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Candidate multilib: .;@m64
+Candidate multilib: 32;@m32
+Selected multilib: .;@m64
+# RTB_CXX        =/tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang++
+# RTB_CC         =/tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang
+# RTB_EXTRA_FLAGS=--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0
+# setup
+Repo: /tmp/rtb/llvm-10-20200201-f85d63a/repo
+# run 1
+++ /tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/ -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/main.cpp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp/OMPStream.cpp
+# run 2
+++ /tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/ -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/main.cpp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp/OMPStream.cpp
+# run 3
+++ /tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/ -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/main.cpp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp/OMPStream.cpp
+# run 4
+++ /tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/ -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/main.cpp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp/OMPStream.cpp
+# run 5
+++ /tmp/rtb/llvm-10-20200201-f85d63a/opt/llvm-10+2020-02-01Z+f85d63a/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fopenmp -DNDEBUG -DOMP -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/ -I/tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/main.cpp /tmp/rtb/llvm-10-20200201-f85d63a/repo/src/omp/OMPStream.cpp
+# check
+./a.out: /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6: version `GLIBCXX_3.4.29' not found (required by ./a.out)
+	linux-vdso.so.1 (0x00007ffe879fa000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x000014b311980000)
+	libm.so.6 => /lib64/libm.so.6 (0x000014b3115fe000)
+	libomp.so => not found
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x000014b3113e6000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x000014b3111c6000)
+	libc.so.6 => /lib64/libc.so.6 (0x000014b310e03000)
+	/lib64/ld-linux-x86-64.so.2 (0x000014b311d50000)
+# PBS output

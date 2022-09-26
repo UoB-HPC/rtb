@@ -1,0 +1,21 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/dpcpp-nightly-20211225/dpcpp_compiler
+clang version 14.0.0 (https://github.com/intel/llvm.git ec97c573cdf684aec779d19ac68f1e9470ca0516)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /tmp/rtb/dpcpp-nightly-20211225/dpcpp_compiler/bin
+Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Candidate multilib: .;@m64
+Candidate multilib: 32;@m32
+Selected multilib: .;@m64
+# RTB_CXX        =/tmp/rtb/dpcpp-nightly-20211225/dpcpp_compiler/bin/clang++
+# RTB_CC         =/tmp/rtb/dpcpp-nightly-20211225/dpcpp_compiler/bin/clang
+# RTB_EXTRA_FLAGS=--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0
+# setup
+# run 1
+++ /tmp/rtb/dpcpp-nightly-20211225/dpcpp_compiler/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -O3 -fsycl -DCL_TARGET_OPENCL_VERSION=220 -DNDEBUG -xc++ -
+append-file: input file not found
+{"realS":2.104,"userS":1.897,"systemS":0.124}
+# PBS output

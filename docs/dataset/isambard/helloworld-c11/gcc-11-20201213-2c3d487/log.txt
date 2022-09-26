@@ -1,0 +1,30 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/../libexec/gcc/x86_64-pc-linux-gnu/11.0.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-11+2020-12-13Z+2c3d487 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 11.0.0 20201213 (experimental) (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+# run 1
+++ /tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 2
+++ /tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 3
+++ /tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 4
+++ /tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 5
+++ /tmp/rtb/gcc-11-20201213-2c3d487/opt/gcc-11+2020-12-13Z+2c3d487/bin/gcc -std=c11 -O3 -march=native -xc -
+# check
+	linux-vdso.so.1 (0x00007ffca2fea000)
+	libc.so.6 => /lib64/libc.so.6 (0x000014da82298000)
+	/lib64/ld-linux-x86-64.so.2 (0x000014da8265b000)
+# PBS output

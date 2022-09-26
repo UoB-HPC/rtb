@@ -1,0 +1,38 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler
+clang version 15.0.0 (/netbatch/donb3496903_00/runDir/jenkins-dir/workspace/Tools_SH/SYCLOS_Nightly/RHEL/llvm.src/clang b9cb1d1247e2432a548c12d7c2e8fa26d262d97c)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin
+Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Candidate multilib: .;@m64
+Candidate multilib: 32;@m32
+Selected multilib: .;@m64
+# RTB_CXX        =/tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang++
+# RTB_CC         =/tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang
+# RTB_EXTRA_FLAGS=--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0
+# setup
+Repo: /tmp/rtb/dpcpp-nightly-20220417/repo
+# run 1
+++ /tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fsycl -DNDEBUG -DSYCL -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/ -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl /tmp/rtb/dpcpp-nightly-20220417/repo/src/main.cpp /tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl/SYCLStream.cpp
+# run 2
+++ /tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fsycl -DNDEBUG -DSYCL -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/ -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl /tmp/rtb/dpcpp-nightly-20220417/repo/src/main.cpp /tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl/SYCLStream.cpp
+# run 3
+++ /tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fsycl -DNDEBUG -DSYCL -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/ -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl /tmp/rtb/dpcpp-nightly-20220417/repo/src/main.cpp /tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl/SYCLStream.cpp
+# run 4
+++ /tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fsycl -DNDEBUG -DSYCL -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/ -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl /tmp/rtb/dpcpp-nightly-20220417/repo/src/main.cpp /tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl/SYCLStream.cpp
+# run 5
+++ /tmp/rtb/dpcpp-nightly-20220417/dpcpp_compiler/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -O3 -fsycl -DNDEBUG -DSYCL -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/ -I/tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl /tmp/rtb/dpcpp-nightly-20220417/repo/src/main.cpp /tmp/rtb/dpcpp-nightly-20220417/repo/src/sycl/SYCLStream.cpp
+# check
+./a.out: /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6: version `GLIBCXX_3.4.29' not found (required by ./a.out)
+./a.out: /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6: version `CXXABI_1.3.13' not found (required by ./a.out)
+	linux-vdso.so.1 (0x00007ffedcf51000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x000015469dcf5000)
+	libm.so.6 => /lib64/libm.so.6 (0x000015469d973000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x000015469d75b000)
+	libsycl.so.5 => not found
+	libc.so.6 => /lib64/libc.so.6 (0x000015469d398000)
+	/lib64/ld-linux-x86-64.so.2 (0x000015469e0c5000)
+# PBS output

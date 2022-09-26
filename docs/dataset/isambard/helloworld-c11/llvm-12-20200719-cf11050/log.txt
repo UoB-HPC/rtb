@@ -1,0 +1,31 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050
+clang version 12.0.0 (https://github.com/llvm/llvm-project.git cf1105069648446d58adfb7a6cc590013d6886ba)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin
+Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Candidate multilib: .;@m64
+Candidate multilib: 32;@m32
+Selected multilib: .;@m64
+# RTB_CXX        =/tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang++
+# RTB_CC         =/tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang
+# RTB_EXTRA_FLAGS=--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0
+# setup
+# run 1
+++ /tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c11 -O3 -march=native -xc -
+# run 2
+++ /tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c11 -O3 -march=native -xc -
+# run 3
+++ /tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c11 -O3 -march=native -xc -
+# run 4
+++ /tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c11 -O3 -march=native -xc -
+# run 5
+++ /tmp/rtb/llvm-12-20200719-cf11050/opt/llvm-12+2020-07-19Z+cf11050/bin/clang --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c11 -O3 -march=native -xc -
+# check
+	linux-vdso.so.1 (0x00007ffc65598000)
+	libc.so.6 => /lib64/libc.so.6 (0x000014c010f09000)
+	/lib64/ld-linux-x86-64.so.2 (0x000014c0112cc000)
+# PBS output

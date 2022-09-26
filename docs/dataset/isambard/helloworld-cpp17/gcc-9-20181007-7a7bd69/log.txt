@@ -1,0 +1,32 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/../libexec/gcc/x86_64-pc-linux-gnu/9.0.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-9+2018-10-07Z+7a7bd69 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+gcc version 9.0.0 20181007 (experimental) (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+# run 1
+++ /tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 2
+++ /tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 3
+++ /tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 4
+++ /tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 5
+++ /tmp/rtb/gcc-9-20181007-7a7bd69/opt/gcc-9+2018-10-07Z+7a7bd69/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# check
+	linux-vdso.so.1 (0x00007ffd9658c000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x0000152b49c2c000)
+	libm.so.6 => /lib64/libm.so.6 (0x0000152b498aa000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x0000152b49692000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000152b492cf000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000152b49ffc000)
+# PBS output

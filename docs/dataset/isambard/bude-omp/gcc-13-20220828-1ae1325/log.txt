@@ -1,0 +1,39 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/../libexec/gcc/x86_64-pc-linux-gnu/13.0.0/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-13+2022-08-28Z+1ae1325 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 13.0.0 20220828 (experimental) (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+Repo: /tmp/rtb/gcc-13-20220828-1ae1325/repo
+# run 1
+++ /tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-13-20220828-1ae1325/repo/src/omp /tmp/rtb/gcc-13-20220828-1ae1325/repo/src/main.cpp
+# run 2
+++ /tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-13-20220828-1ae1325/repo/src/omp /tmp/rtb/gcc-13-20220828-1ae1325/repo/src/main.cpp
+# run 3
+++ /tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-13-20220828-1ae1325/repo/src/omp /tmp/rtb/gcc-13-20220828-1ae1325/repo/src/main.cpp
+# run 4
+++ /tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-13-20220828-1ae1325/repo/src/omp /tmp/rtb/gcc-13-20220828-1ae1325/repo/src/main.cpp
+# run 5
+++ /tmp/rtb/gcc-13-20220828-1ae1325/opt/gcc-13+2022-08-28Z+1ae1325/bin/g++ -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/gcc-13-20220828-1ae1325/repo/src/omp /tmp/rtb/gcc-13-20220828-1ae1325/repo/src/main.cpp
+# check
+./a.out: /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6: version `GLIBCXX_3.4.29' not found (required by ./a.out)
+	linux-vdso.so.1 (0x00007ffe866a9000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x0000148372a54000)
+	libm.so.6 => /lib64/libm.so.6 (0x00001483726d2000)
+	libmvec.so.1 => /lib64/libmvec.so.1 (0x00001483724a7000)
+	libgomp.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgomp.so.1 (0x0000148372269000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x0000148372051000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x0000148371e31000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000148371a6e000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000148372e24000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x000014837186a000)
+# PBS output

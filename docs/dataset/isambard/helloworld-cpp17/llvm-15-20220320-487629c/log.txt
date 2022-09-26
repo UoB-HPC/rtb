@@ -1,0 +1,34 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c
+clang version 15.0.0 (https://github.com/llvm/llvm-project.git 487629cc61b56d9346a387411a2454c7be02526a)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin
+Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Candidate multilib: .;@m64
+Candidate multilib: 32;@m32
+Selected multilib: .;@m64
+# RTB_CXX        =/tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang++
+# RTB_CC         =/tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang
+# RTB_EXTRA_FLAGS=--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0
+# setup
+# run 1
+++ /tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c++17 -O3 -march=native -xc++ -
+# run 2
+++ /tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c++17 -O3 -march=native -xc++ -
+# run 3
+++ /tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c++17 -O3 -march=native -xc++ -
+# run 4
+++ /tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c++17 -O3 -march=native -xc++ -
+# run 5
+++ /tmp/rtb/llvm-15-20220320-487629c/opt/llvm-15+2022-03-20Z+487629c/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -std=c++17 -O3 -march=native -xc++ -
+# check
+	linux-vdso.so.1 (0x00007fff8b185000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x0000146c58188000)
+	libm.so.6 => /lib64/libm.so.6 (0x0000146c57e06000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x0000146c57bee000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000146c5782b000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000146c58558000)
+# PBS output

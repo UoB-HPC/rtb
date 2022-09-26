@@ -1,0 +1,29 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/../libexec/gcc/x86_64-pc-linux-gnu/9.3.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-9+2020-10-30Z+b2593aa --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+gcc version 9.3.1 20201030 (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+# run 1
+++ /tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 2
+++ /tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 3
+++ /tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 4
+++ /tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/gcc -std=c11 -O3 -march=native -xc -
+# run 5
+++ /tmp/rtb/gcc-9-20201030-b2593aa/opt/gcc-9+2020-10-30Z+b2593aa/bin/gcc -std=c11 -O3 -march=native -xc -
+# check
+	linux-vdso.so.1 (0x00007fff97ea0000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000148aded7f000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000148adf142000)
+# PBS output

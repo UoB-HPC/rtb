@@ -1,0 +1,38 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d
+clang version 10.0.1 (https://github.com/llvm/llvm-project.git 2dc664d578f0e9c8ea5975eed745e322fa77bffe)
+Target: x86_64-unknown-linux-gnu
+Thread model: posix
+InstalledDir: /tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin
+Found candidate GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Selected GCC installation: /usr/lib/gcc/x86_64-redhat-linux/8
+Candidate multilib: .;@m64
+Candidate multilib: 32;@m32
+Selected multilib: .;@m64
+# RTB_CXX        =/tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang++
+# RTB_CC         =/tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang
+# RTB_EXTRA_FLAGS=--gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0
+# setup
+Repo: /tmp/rtb/llvm-10-20200611-2dc664d/repo
+# run 1
+++ /tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/llvm-10-20200611-2dc664d/repo/src/omp /tmp/rtb/llvm-10-20200611-2dc664d/repo/src/main.cpp
+# run 2
+++ /tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/llvm-10-20200611-2dc664d/repo/src/omp /tmp/rtb/llvm-10-20200611-2dc664d/repo/src/main.cpp
+# run 3
+++ /tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/llvm-10-20200611-2dc664d/repo/src/omp /tmp/rtb/llvm-10-20200611-2dc664d/repo/src/main.cpp
+# run 4
+++ /tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/llvm-10-20200611-2dc664d/repo/src/omp /tmp/rtb/llvm-10-20200611-2dc664d/repo/src/main.cpp
+# run 5
+++ /tmp/rtb/llvm-10-20200611-2dc664d/opt/llvm-10+2020-06-11Z+2dc664d/bin/clang++ --gcc-toolchain=/lustre/projects/bristol/modules/gcc/12.1.0 -Wl,--unresolved-symbols=ignore-all -std=c++17 -march=native -Ofast -fopenmp -DNDEBUG -DOMP -DUSE_PPWI=1,2,4,8,16,32,64,128 -I/tmp/rtb/llvm-10-20200611-2dc664d/repo/src/omp /tmp/rtb/llvm-10-20200611-2dc664d/repo/src/main.cpp
+# check
+./a.out: /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6: version `GLIBCXX_3.4.29' not found (required by ./a.out)
+	linux-vdso.so.1 (0x00007ffcf67da000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x0000146a355c6000)
+	libm.so.6 => /lib64/libm.so.6 (0x0000146a35244000)
+	libomp.so => not found
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x0000146a3502c000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x0000146a34e0c000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000146a34a49000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000146a35996000)
+# PBS output

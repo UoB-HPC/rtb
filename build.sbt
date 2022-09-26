@@ -156,9 +156,13 @@ lazy val webapp = project
       val index           = "index.html"
       val publicResources = baseDirectory.value / "src/main/js/public/"
 
-      Files.list(publicResources.toPath).filter(_.getFileName.toString != index).forEach { p =>
-        Files.copy(p, (distFolder / p.getFileName.toString).toPath, REPLACE_EXISTING)
-      }
+      Files
+        .list(publicResources.toPath)
+        .filter(_.getFileName.toString != index)
+        .filter(_.getFileName.toString != ".gitignore")
+        .forEach { p =>
+          Files.copy(p, (distFolder / p.getFileName.toString).toPath, REPLACE_EXISTING)
+        }
 
       val indexFrom = publicResources / index
       val indexTo   = distFolder / index

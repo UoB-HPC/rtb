@@ -1,0 +1,33 @@
+# restore fixture
+# prime
+Compiler root:/tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107
+Using built-in specs.
+COLLECT_GCC=/tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++
+COLLECT_LTO_WRAPPER=/tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/../libexec/gcc/x86_64-pc-linux-gnu/12.1.1/lto-wrapper
+Target: x86_64-pc-linux-gnu
+Configured with: ../configure --prefix=/opt/gcc-12+2022-07-17Z+57f5107 --enable-languages=c,c++ --disable-bootstrap --disable-multilib --disable-libvtv --without-isl
+Thread model: posix
+Supported LTO compression algorithms: zlib
+gcc version 12.1.1 20220717 (GCC) 
+# RTB_CXX        =/tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++
+# RTB_CC         =/tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/gcc
+# RTB_EXTRA_FLAGS=
+# setup
+# run 1
+++ /tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 2
+++ /tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 3
+++ /tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 4
+++ /tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# run 5
+++ /tmp/rtb/gcc-12-20220717-57f5107/opt/gcc-12+2022-07-17Z+57f5107/bin/g++ -std=c++17 -O3 -march=native -xc++ -
+# check
+	linux-vdso.so.1 (0x00007fff7fd4e000)
+	libstdc++.so.6 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libstdc++.so.6 (0x0000154c0c793000)
+	libm.so.6 => /lib64/libm.so.6 (0x0000154c0c411000)
+	libgcc_s.so.1 => /lustre/projects/bristol/modules/gcc/10.3.0/lib64/libgcc_s.so.1 (0x0000154c0c1f9000)
+	libc.so.6 => /lib64/libc.so.6 (0x0000154c0be36000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000154c0cb63000)
+# PBS output
