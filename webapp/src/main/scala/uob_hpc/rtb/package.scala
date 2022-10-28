@@ -3,6 +3,10 @@ package uob_hpc.rtb
 import com.raquo.airstream.state.Var
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom.fetch
+
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneOffset}
+import scala.collection.immutable.ArraySeq
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.scalajs.js
@@ -43,6 +47,20 @@ extension (inline t: Throwable) {
   }
 }
 
+case class Build(
+    version: String,
+    date: Instant,
+    hash: String,
+    hashLength: Int,
+    changes: ArraySeq[(String, Instant, String)]
+) {
+  def shortHash    = hash.substring(0, hashLength)
+  lazy val isoDate = date.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE)
+}
+object Build {
+  import Pickler.*
+  given ReadWriter[Build] = macroRW
+}
 enum Deferred[+A] {
   case Pending
   case Success(a: A)
@@ -106,8 +124,6 @@ inline def mkColour(inline n: Int) = Colours((n % (Colours.size - 1)).abs)
 
 given [A: upickle.default.ReadWriter]: upickle.default.ReadWriter[Var[A]] =
   upickle.default.readwriter[A].bimap[Var[A]](_.now(), Var(_))
-
-//def fetchJson[A](url: String): Future[A] = fetch(url).toFuture.flatMap(_.json().toFuture).map(_.asInstanceOf[A])
 
 inline def fetchRaw(inline url: String): Future[String]                = fetch(url).toFuture.flatMap(_.text().toFuture)
 inline def fetchJson[A: Pickler.Reader](inline url: String): Future[A] = fetchRaw(url).map(Pickler.web.read[A](_))

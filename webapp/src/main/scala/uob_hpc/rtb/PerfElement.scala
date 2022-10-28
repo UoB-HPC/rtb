@@ -38,7 +38,7 @@ object PerfElement {
           WebApp.router.replaceState(_)
         )
 
-        val controls = DatasetElements.leftControlContainer(p(s"Dataset: $series")) {
+        val controls = DatasetElements.leftControlContainer(p(s"Dataset: $series"), 600) {
           table(
             cls             := "table is-narrow",
             backgroundColor := "transparent",
@@ -76,19 +76,35 @@ object PerfElement {
         }
 
         val focused = DatasetElements.rightControlContainer(
-          p(
-            s"Datapoint:",
-            child.text <-- page.map(_.focus).map {
-              case None        => " -- "
-              case Some(state) => s"#${state.index}"
+          div(
+            display.flex,
+            alignItems.center,
+            justifyContent.flexEnd,
+            width := 100.pct,
+            children <-- page.map {
+              case Page.Perf(_, _, None) => Seq(span(" -- "))
+              case page @ Page.Perf(_, _, Some(state)) =>
+                val entry @ (key, _) = dataset.providers(state.index)
+                DatasetElements.focusPanelHeader(
+                  key,
+                  state.group,
+                  g => WebApp.navigateTo(page.copy(focus = Some(state.copy(group = g))))
+                )
             }
           )
         ) {
           div(
-            child.text <-- page.map(_.focus).map {
-              case None => "Select a datapoint in the chart for details."
+            overflowY.scroll,
+            height := 100.pct,
+            child <-- page.map(_.focus).map {
+              case None => "Select a data point in the chart for details."
               case Some(state) =>
-                s"${state.toString()}"
+                state.group match {
+                  case FocusGroup.Compiler =>
+                    DatasetElements.focusCompilerPanel(dataset, state.index)
+                  case FocusGroup.Output =>
+                    div()
+                }
             }
           )
         }
@@ -145,19 +161,29 @@ object PerfElement {
                     case Some(WebApp.TimeGroup.User)        => e.stdDevUserS
                   },
                 scrollX,
-                page.map(_.focus.flatMap(x => allSeries.find(s => s.jobName == x._1).flatMap(_.results.lift(x._2)))),
-                { case ((job, _, _), x) =>
-                  val p = page.observe(owner).now()
+                page.map(_.focus.flatMap(x => xs.get((x.job, x.name, x.version)).flatMap(_.lift(x.index)))),
+                { case (k @ (job, name, version), x) =>
+                  val p     = page.observe(owner).now()
+                  val index = xs(k).indexOf(x)
                   WebApp.router.replaceState(
-                    p.copy(focus = Some(PerfFocus(job, 0, FocusGroup.Compiler)))
+                    p.copy(focus =
+                      Some(
+                        p.focus
+                          .map(_.copy(job = job, name = name, version = version, index = index))
+                          .getOrElse(PerfFocus(job, name, version, index, FocusGroup.Compiler))
+                      )
+                    )
                   )
                 }
               )
             }
           },
           div(
+            overflowY.hidden,
             display.flex,
             flexDirection.row,
+            maxHeight := 350.px,
+            minHeight := 350.px,
             controls,
             focused
           )
@@ -166,6 +192,7 @@ object PerfElement {
     }
 
     div(
+      overflowY.hidden,
       child <-- X,
       flexGrow := 1,
       display.flex,

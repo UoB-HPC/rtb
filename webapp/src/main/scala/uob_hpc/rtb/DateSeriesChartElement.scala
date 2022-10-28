@@ -9,6 +9,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.{ChronoUnit, IsoFields}
 import scala.collection.immutable.ArraySeq
+import com.raquo.laminar.nodes.ReactiveNode
 
 object DateSeriesChartElement {
 
@@ -65,14 +66,19 @@ object DateSeriesChartElement {
     inline def asY(inline x: A)     = secondToPx(yFn(x))
     inline def makeOne(inline x: A) = asX(x) -> asY(x)
 
-    val seriesLabels = xs.map { k =>
-      svg.text(
-        //        svg.x                := .px,
-        svg.dominantBaseline := "central",
-        svg.transform        := s" translate(${asX(k)}, -${DateLabelOffset}) rotate(90)",
-        s"${dateFn(k).format(DateTimeFormatter.ISO_LOCAL_DATE)}"
-      )
-    }
+    val seriesLabels = xs
+      .foldLeft(Vector.empty[A]) {
+        case (Vector(), y)                                             => Vector(y)
+        case (xs :+ x, y) if (asX(x) - asX(y)).abs > SeriesLabelHeight => (xs :+ x :+ y)
+        case (xs, y)                                                   => xs
+      }
+      .map { k =>
+        svg.text(
+          svg.dominantBaseline := "central",
+          svg.transform        := s"translate(${asX(k)}, -${DateLabelOffset - 4}) rotate(90)",
+          s"${dateFn(k).format(DateTimeFormatter.ISO_LOCAL_DATE)}"
+        )
+      }
 
     val yRange       = 0 to maxY.ceil.toInt by yStep
     val YLabelOffset = yRange.lastOption.map(_.toString.length.toDouble * CharOffset).getOrElse(0d) + 40d
@@ -196,10 +202,11 @@ object DateSeriesChartElement {
             mkColour(k.hashCode)
           )
         case (min, xs, max) =>
+          val greyScale = (255.0 / xs.size.toDouble).ceil.toInt
           (
             (min, max),
             groupLabelsFn(xs.map(_._1), (SeriesLabelOffset / CharOffset).ceil.toInt),
-            mkColour(xs.hashCode) // TODO mix colours
+            Colour(greyScale, greyScale, greyScale)
           )
       }.map { case ((min, max), labels, c) =>
         val ArrowWidth = 15
@@ -253,7 +260,7 @@ object DateSeriesChartElement {
             //     }
             //   )
             // ),
-            onClick.preventDefault --> {e => set(name, x)},
+            onClick.preventDefault --> { _ => set(name, x) },
             svg.cx := xx.px,
             svg.cy := yy.px,
             svg.r <-- focused

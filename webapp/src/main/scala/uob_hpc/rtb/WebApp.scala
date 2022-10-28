@@ -69,28 +69,30 @@ object WebApp {
     case Output   extends FocusGroup("output")
   }
 
-  case class PerfFocus(job: String, index: Int, group: FocusGroup) {
-    def asPath = s"$job$SeqDelim$index$SeqDelim${group.name}"
+  case class PerfFocus(job: String, name: String, version: String, index: Int, group: FocusGroup) {
+    def asPath = s"$job^$name^$version^$index^${group.name}"
   }
   object PerfFocus {
     given ReadWriter[PerfFocus] = macroRW
-    def apply(path: String): Option[PerfFocus] = path match {
-      case s"$job^$index^$group" =>
+    def apply(path: String): Option[PerfFocus] = { 
+      println(s"Dec:${path}")
+      path match {
+      case s"$job^$name^$version^$index^$group" =>
         for {
           g <- FocusGroup(group)
           i <- index.toIntOption
-        } yield PerfFocus(job, i, g)
+        } yield PerfFocus(job, name, version, i, g)
       case _ => None
     }
-  }
+  }}
 
   case class SizeFocus(index: Int, group: FocusGroup) {
-    def asPath = s"$index$SeqDelim${group.name}"
+    def asPath = s"$index^${group.name}"
   }
   object SizeFocus {
     given ReadWriter[SizeFocus] = macroRW
     def apply(path: String): Option[SizeFocus] = path match {
-      case s"${index}_$group" =>
+      case s"${index}^$group" =>
         for {
           g <- FocusGroup(group)
           i <- index.toIntOption
@@ -129,15 +131,13 @@ object WebApp {
         basePath
       ),
       Route.withQuery[Page.Perf, Either[String, (String, String)], PathType](
-        page => UrlMatching(Left(page.series), page.state.asPath),
+        page => UrlMatching(page.focus.map(f => page.series -> f.asPath).toRight(page.series), page.state.asPath),
         {
           case UrlMatching(Left(series), query)           => Page.Perf(series, ViewState(query), None)
           case UrlMatching(Right((series, focus)), query) => Page.Perf(series, ViewState(query), PerfFocus(focus))
         },
-        (
-          (root / "dataset" / segment[String] / "perf" / endOfSegments) ||
-            (root / "dataset" / segment[String] / "perf" / segment[String] / endOfSegments)
-        ) ? ViewStateParams,
+        ((root / "dataset" / segment[String] / "perf" / endOfSegments) ||
+          (root / "dataset" / segment[String] / "perf" / segment[String] / endOfSegments)) ? ViewStateParams,
         basePath
       ),
       Route.withQuery[Page.Size, Either[String, (String, String)], PathType](
@@ -265,8 +265,8 @@ object WebApp {
             margin := "0 auto",
             div(
               cls := "buttons has-addons",
-              mkSubPage(Page.Perf(series, state, None), "Perf.", "fa-stopwatch"),
-              mkSubPage(Page.Size(series, state, None), "Size", "fa-file-archive"),
+              mkSubPage(Page.Perf(series, state, None), "Compile Perf.", "fa-stopwatch"),
+              mkSubPage(Page.Size(series, state, None), "Compiler Size", "fa-file-archive"),
               mkSubPage(Page.JobInfo(series, state, None), "Job Info", "fa-code"),
               mkSubPage(Page.RunnerInfo(series, state), "Runner Info", "fa-server")
             )
@@ -326,7 +326,7 @@ object WebApp {
       div(
         height    := 100.vh,
         width     := 100.vw,
-        minWidth  := 800.px,
+        minWidth  := 900.px,
         minHeight := 500.px,
         display.flex,
         flexDirection.column,

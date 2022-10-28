@@ -57,7 +57,7 @@ lazy val reactor = project
     },
     libraryDependencies ++=
       Seq(
-        "org.slf4j"               % "slf4j-simple"               % "2.0.2",
+        "org.slf4j"               % "slf4j-simple"               % "2.0.5",
         "org.eclipse.jgit"        % "org.eclipse.jgit"           % "6.3.0.202209071007-r",
         ("com.github.pathikrit"  %% "better-files"               % "3.9.1").cross(CrossVersion.for3Use2_13),
         "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4",
@@ -95,7 +95,7 @@ lazy val webapp = project
     libraryDependencies ++= Seq(
       "org.scala-js"      %%% "scalajs-dom"       % "2.3.0",
       "io.github.cquiroz" %%% "scala-java-time"   % "2.4.0", // ignore timezones
-      "com.raquo"         %%% "laminar"           % "0.14.2",
+      "com.raquo"         %%% "laminar"           % "0.14.5",
       "com.raquo"         %%% "waypoint"          % "0.5.0",
       "io.github.pityka"  %%% "nspl-scalatags-js" % "0.9.0"
     ),

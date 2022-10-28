@@ -3,6 +3,7 @@ package uob_hpc.rtb
 import com.raquo.laminar.api.L.*
 import uob_hpc.rtb.WebApp.{FocusGroup, Page, SizeFocus, ViewState}
 import scala.collection.immutable.SortedSet
+import java.time.format.DateTimeFormatter
 
 object SizeElement {
 
@@ -30,7 +31,7 @@ object SizeElement {
           WebApp.router.replaceState(_)
         )
 
-        val controls = DatasetElements.leftControlContainer(p(s"Dataset: $series")) {
+        val controls = DatasetElements.leftControlContainer(p(s"Dataset: $series"), 400) {
           table(
             cls             := "table is-narrow",
             backgroundColor := "transparent",
@@ -56,25 +57,60 @@ object SizeElement {
         }
 
         val focused = DatasetElements.rightControlContainer(
-          p(
-            s"Datapoint:",
-            child.text <-- page.map(_.focus).map {
-              case None        => " -- "
-              case Some(state) => s"#${state.index}"
+          div(
+            display.flex,
+            alignItems.center,
+            justifyContent.flexEnd,
+            width := 100.pct,
+            children <-- page.map {
+              case Page.Size(_, _, None) => Seq(span(" -- "))
+              case page @ Page.Size(_, _, Some(state)) =>
+                val entry @ (key, _) = dataset.providers(state.index)
+                DatasetElements.focusPanelHeader(
+                  key,
+                  state.group,
+                  g => WebApp.navigateTo(page.copy(focus = Some(state.copy(group = g))))
+                )
             }
           )
         ) {
           div(
-            child.text <-- page.map(_.focus).map {
-              case None => "Select a datapoint in the chart for details."
+            overflowY.scroll,
+            height := 100.pct,
+            child <-- page.map(_.focus).map {
+              case None => "Select a data point in the chart for details."
               case Some(state) =>
-                s"${state.toString()}"
+                state.group match {
+                  case FocusGroup.Compiler =>
+                    DatasetElements.focusCompilerPanel(dataset, state.index)
+                  case FocusGroup.Output =>
+                    val entry @ (key, size) = dataset.providers(state.index)
+                    val file =
+                      s"${key.name}-${key.version}.${key.date.format(DateTimeFormatter.ISO_DATE)}Z.${key.extra.getOrElse("")}"
+                    table(
+                      cls             := "table",
+                      backgroundColor := "transparent",
+                      thead(),
+                      tbody(
+                        tr(
+                          td("Download"),
+                          td(
+                            a(
+                              s"$file.tar.xz",
+                              href := s"https://github.com/uob-hpc/compiler-snapshots/releases/download/$file/$file.tar.xz"
+                            )
+                          )
+                        ),
+                        tr(
+                          td("Size"),
+                          td(f"${(size.toDouble / 1024 / 1024)}%.2f MB (${(size.toDouble / 1000 / 1000)}%.2f MiB)")
+                        )
+                      )
+                    )
+                }
             }
           )
         }
-
-        dataset.series(series)
-        page.map(_.focus).map(x => x)
 
         div(
           display.flex,
@@ -114,17 +150,23 @@ object SizeElement {
                 scrollX,
                 page.map(_.focus.flatMap(x => dataset.providers.lift(x.index))),
                 { case (_, k) =>
-                  val p = page.observe(owner).now()
+                  val p     = page.observe(owner).now()
+                  val index = dataset.providers.indexOf(k)
                   WebApp.router.replaceState(
-                    p.copy(focus = Some(SizeFocus(dataset.providers.indexOf(k), FocusGroup.Compiler)))
+                    p.copy(focus =
+                      Some(p.focus.map(_.copy(index = index)).getOrElse(SizeFocus(index, FocusGroup.Compiler)))
+                    )
                   )
                 }
               )
             }
           },
           div(
+            overflowY.hidden,
             display.flex,
             flexDirection.row,
+            maxHeight := 350.px,
+            minHeight := 350.px,
             controls,
             focused
           )
@@ -132,6 +174,7 @@ object SizeElement {
     }
 
     div(
+      overflowY.hidden,
       child <-- X,
       display.flex,
       flexGrow := 1,

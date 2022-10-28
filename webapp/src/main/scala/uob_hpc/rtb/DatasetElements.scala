@@ -4,27 +4,128 @@ import scala.collection.immutable.ArraySeq
 import com.raquo.laminar.api.L.*
 import scala.collection.immutable.SortedSet
 import com.raquo.laminar.nodes.ReactiveHtmlElement
+import java.time.format.DateTimeFormatter
+import uob_hpc.rtb.WebApp.FocusGroup
+import com.raquo.airstream.web.AjaxEventStream
+import java.time.ZoneOffset
 object DatasetElements {
 
-  def leftControlContainer(header: ReactiveHtmlElement[_])(body: ReactiveHtmlElement[_]) =
+  def leftControlContainer(header: ReactiveHtmlElement[_], width: Int)(body: ReactiveHtmlElement[_]) =
     article(
+      overflowY.hidden,
       flexGrow := "1",
       margin   := "8px 8px 8px 16px",
-
       cls      := "message",
-      div(cls := "message-header", header),
-      div(cls := "message-body", body)
+      minWidth := width.px,
+      maxWidth := width.px,
+      div(cls := "message-header", height := 2.5.em, header),
+      div(cls := "message-body", height   := 100.pct, body)
     )
 
   def rightControlContainer(header: ReactiveHtmlElement[_])(body: ReactiveHtmlElement[_]) =
     article(
+      overflowY.hidden,
       flexGrow := "1",
       margin   := "8px 16px 8px 8px",
-
       cls      := "message",
-      div(cls := "message-header", header),
-      div(cls := "message-body", body)
+      div(cls := "message-header", height := 2.5.em, header),
+      div(cls := "message-body", height   := 100.pct, body)
     )
+
+  def focusPanelHeader(key: Key, current: FocusGroup, navigate: FocusGroup => Binder[HtmlElement]) = Seq(
+    span(
+      fontFamily := "monospace",
+      fontSize   := 0.9.em,
+      s"${key.extra.map(s => s"[$s] ").getOrElse("")}${key.name}-${key.version} ${key.date.format(DateTimeFormatter.ISO_DATE)}"
+    ),
+    div(
+      cls        := "buttons has-addons ",
+      marginLeft := "auto",
+      ul(
+        button(
+          cls                                  := "button is-small is-dark",
+          cls.toggle("is-info", "is-selected") := current == FocusGroup.Compiler,
+          span("Compiler"),
+          navigate(FocusGroup.Compiler)
+        ),
+        button(
+          cls                                  := "button is-small is-dark",
+          cls.toggle("is-info", "is-selected") := current == FocusGroup.Output,
+          span("Output"),
+          navigate(FocusGroup.Output)
+        )
+      )
+    )
+  )
+
+  def focusCompilerPanel(dataset: Dataset, index: Int) = {
+    val grouped =
+      dataset.providers.groupBy(x => x._1.name -> x._1.version).map((k, xs) => k -> xs.sortBy(_._1.date))
+
+    val entry @ (key, size) = dataset.providers(index)
+    val file =
+      s"${key.name}-${key.version}.${key.date.format(DateTimeFormatter.ISO_DATE)}Z.${key.extra.getOrElse("")}"
+
+    val repoBaseUrl = key.name match {
+      case "gcc"  => Some(s"https://github.com/gcc-mirror/gcc")
+      case "llvm" => Some(s"https://github.com/llvm/llvm-project")
+      case _      => None
+    }
+
+    val build = AjaxEventStream
+      .get(url = s"https://uob-hpc.github.io/compiler-snapshots/${key.name}/$file.json")
+      .map(_.responseText)
+      .map(Pickler.web.read[Build](_))
+
+    val changes = build.map { build =>
+      ul(
+        build.changes.map { case (hash, date, message) =>
+          li(
+            fontSize.smaller,
+            a(
+              s"[$hash]",
+              fontFamily := "monospace",
+              repoBaseUrl.map(u => href := s"$u/commit/$hash"),
+              target := "_blank"
+            ),
+            " ",
+            span(
+              date.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE),
+              fontFamily := "monospace"
+            ),
+            " ",
+            message
+          )
+        }
+      )
+    }
+
+    val diff = grouped.get(key.name -> key.version).map(xs => xs -> xs.indexOf(entry)) match {
+      case Some((xs, n)) if n > 0 => // excludes 0 because 0 doesn't have a parent commit
+        for {
+          from    <- xs(n - 1)._1.extra
+          to      <- dataset.providers(index)._1.extra
+          diffUrl <- repoBaseUrl.map(u => s"$u/compare/$from..$to")
+        } yield a(s"View $from..$to on GitHub", target := "_blank", href := diffUrl)
+      case _ => None
+    }
+
+    table(
+      cls             := "table",
+      backgroundColor := "transparent",
+      thead(),
+      tbody(
+        tr(
+          td("Diff"),
+          td(diff)
+        ),
+        tr(
+          td("Commits (", child.text <-- build.map(_.changes.size.toString), ")"),
+          td(child <-- changes)
+        )
+      )
+    )
+  }
 
   def chartContainer(mkChart: (Signal[(Int, Int)], Owner) => Source[Child]) = {
     val clientSize = Var((0, 0))
