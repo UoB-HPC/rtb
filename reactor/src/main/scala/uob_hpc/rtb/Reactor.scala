@@ -232,8 +232,8 @@ object Reactor {
            |_fixture &>>"${sink.logFile}"
            |""".stripMargin
     )
-    println("\tSetting up fixture...")
-    Process(s"bash ${sink.execFile}").!
+    val (exitCode, elapsed) = timed(Process(s"bash ${sink.execFile}").!)
+    println(f"\t<fixture> => exit=$exitCode ($elapsed%.2f s)")
     val runScripts = mkRunScripts(
       sink = sink,
       scratchDir = scratch,
@@ -245,19 +245,27 @@ object Reactor {
     runner match {
       case Runner.Local =>
         val (failures, results) = runScripts.partitionMap { case ((key, keyIdx), item, content) =>
-          if (item.execFile.contentAsString == content) {
-            println(s"\t${key.formatted} => skipped")
-            readEntry(keyIdx, item, N)
-          } else {
+          def executeJobItem() = {
             val outputLns = mutable.ArrayBuffer[String]()
-            val exitCode  = Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _)
-            println(s"\t${key.formatted} => $exitCode")
+            val (exitCode, elapsed) =
+              timed(Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _))
+            println(f"\t${key.formatted} => exit=$exitCode ($elapsed%.2f s)")
             if (exitCode != 0) {
               outputLns += s"# Process finished with exit code $exitCode"
               item.errorFile.writeText(outputLns.mkString("\n"))
               Left(keyIdx)
             } else readEntry(keyIdx, item, N)
           }
+          if (item.execFile.contentAsString == content) {
+            readEntry(keyIdx, item, N) match {
+              case e @ Right(x) =>
+                println(f"\t${key.formatted} => checkpoint: ok, #${x.key}"); e
+              case Left(err) =>
+                println(f"\t${key.formatted} => checkpoint: retrying, exit=$err")
+                item.dir.clear() // Clean up first so we don't get leftover timings
+                executeJobItem()
+            }
+          } else executeJobItem()
         }
         println(s"\nAll jobs completed: failures=${failures.size}, successes=${results.size}")
         Series[Int](sink.jobFile.nameWithoutExtension, sink.jobFile.name, sink.jobFile.sha256, results, failures)
