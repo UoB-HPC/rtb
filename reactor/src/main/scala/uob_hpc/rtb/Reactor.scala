@@ -24,8 +24,7 @@ object Reactor {
 
   given ValueConverter[Vector[String]] = singleArgConverter(_.split(",").toVector)
 
-  private val Hostname  = InetAddress.getLocalHost.getHostName
-//  private val TodayDate = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+  private val Hostname = InetAddress.getLocalHost.getHostName
 
   private class Config(arguments: Seq[String]) extends ScallopConf(arguments) {
     val input: ScallopOption[File] = opt( //
@@ -251,7 +250,7 @@ object Reactor {
             readEntry(keyIdx, item, N)
           } else {
             val outputLns = mutable.ArrayBuffer[String]()
-            val exitCode = Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _)
+            val exitCode  = Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _)
             println(s"\t${key.formatted} => $exitCode")
             if (exitCode != 0) {
               outputLns += s"# Process finished with exit code $exitCode"
@@ -345,7 +344,10 @@ object Reactor {
       .filter(_.extension(includeDot = false, includeAll = true).contains("job.sh"))
       .to(ArraySeq)
       .groupBy(x => config.input().relativize(x.parent))
-      .map { case (p, n) => p.toString -> n.sortBy(_.name) }
+      .map { case (p, n) =>
+        (if (p.getNameCount == 1 && p.getRoot == null) config.input().name else p.toString) ->
+          n.sortBy(_.name)
+      }
       .to(TreeMap)
 
     if (config.output().isRegularFile) {
