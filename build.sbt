@@ -48,7 +48,8 @@ lazy val model = crossProject(JSPlatform, JVMPlatform)
 lazy val reactor = project
   .settings(
     commonSettings,
-    name := "reactor",
+    name                       := "reactor",
+    assembly / assemblyJarName := "reactor.jar",
     assemblyMergeStrategy := {
       case PathList("META-INF", "versions", "9", "module-info.class") => MergeStrategy.discard
       case x =>
@@ -57,7 +58,7 @@ lazy val reactor = project
     },
     libraryDependencies ++=
       Seq(
-        "org.slf4j"               % "slf4j-simple"               % "2.0.5",
+        "org.slf4j"               % "slf4j-simple"               % "2.0.3",
         "org.eclipse.jgit"        % "org.eclipse.jgit"           % "6.3.0.202209071007-r",
         ("com.github.pathikrit"  %% "better-files"               % "3.9.1").cross(CrossVersion.for3Use2_13),
         "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4",

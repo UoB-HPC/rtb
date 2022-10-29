@@ -25,7 +25,7 @@ object Reactor {
   given ValueConverter[Vector[String]] = singleArgConverter(_.split(",").toVector)
 
   private val Hostname  = InetAddress.getLocalHost.getHostName
-  private val TodayDate = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
+//  private val TodayDate = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE)
 
   private class Config(arguments: Seq[String]) extends ScallopConf(arguments) {
     val input: ScallopOption[File] = opt( //
@@ -33,11 +33,11 @@ object Reactor {
       descr = "Input dir for job scripts"
     )
     val output: ScallopOption[File] = opt( //
-      default = Some(File(s"./dataset-$Hostname-$TodayDate")),
+      default = Some(File(s"./dataset-$Hostname")),
       descr = "Output dir for job results"
     )
     val scratch: ScallopOption[File] = opt( //
-      default = Some(File(s"/dev/shm/scratch-$Hostname-$TodayDate")),
+      default = Some(File(s"/dev/shm/scratch-$Hostname")),
       descr = "Work dir for running the jobs on"
     )
     val cache: ScallopOption[File] = opt( //
@@ -64,90 +64,97 @@ object Reactor {
   }
 
   private case class JobSink(dir: File) {
-    lazy val execFile: File  = (dir / "exec.job").createFileIfNotExists()
-    lazy val logFile: File   = (dir / "log.txt").createFileIfNotExists()
-    lazy val errorFile: File = (dir / "log.err.txt").createFileIfNotExists()
+    def jobFile: File    = (dir / "input.job.sh").createFileIfNotExists()
+    def execFile: File   = (dir / "exec.job").createFileIfNotExists()
+    def logFile: File    = (dir / "log.txt").createFileIfNotExists()
+    def errorFile: File  = (dir / "log.err.txt").createFileIfNotExists()
+    def fixtureDir: File = (dir / "fixture").createDirectoryIfNotExists()
+    def item(k: Key)     = JobItem((dir / k.formatted).createDirectoryIfNotExists())
+  }
+
+  private case class JobItem(dir: File) {
+    def timeFile(n: String): File = dir / s"time.$n.json"
+    def execFile: File            = (dir / "exec.job").createFileIfNotExists()
+    def logFile: File             = (dir / "log.txt").createFileIfNotExists()
+    def errorFile: File           = (dir / "log.err.txt").createFileIfNotExists()
   }
 
   private def mkRunScripts(
-      jobFile: File,
+      sink: JobSink,
       scratchDir: File,
-      fixtureDir: File,
-      outputDir: File,
       N: Int,
       keyAndPrelude: ArraySeq[((Key, Int), String)]
-  ): ArraySeq[((Key, Int), JobSink, String)] = keyAndPrelude.map { case (keyAndIdx @ (key, _), prelude) =>
-    val jobOutputDir = (outputDir / key.formatted).createDirectoryIfNotExists(createParents = true)
-    // Don't create the workdir now because the script might be executed in a different node.
+  ): ArraySeq[((Key, Int), JobItem, String)] = keyAndPrelude.map { case (keyAndIdx @ (key, _), prelude) =>
+    // Don't create the workdir now because the script might be executed on a different node.
     val jobWorkDir = scratchDir / key.formatted
-
+    val jobItem    = sink.item(key)
     (
       keyAndIdx,
-      JobSink(jobOutputDir),
+      jobItem,
       s"""
           |set -eu
           |TIMEFORMAT='{"realS":%R,"userS":%U,"systemS":%S}'
           |(
           |
-          |  rm -rf $jobWorkDir
-          |  mkdir -p $jobWorkDir
+          |  rm -rf "$jobWorkDir"
+          |  mkdir -p "$jobWorkDir"
           |  cd "$jobWorkDir" || (echo "Cannot enter $jobWorkDir" && exit 1)
           |
-          |  echo "# restore fixture" >"$jobOutputDir/log.txt"
-          |  cp -a $fixtureDir/. .  &>>"$jobOutputDir/log.txt"
+          |  echo "# restore fixture" >"${jobItem.logFile}"
+          |  cp -a "${sink.fixtureDir}"/. .  &>>"${jobItem.logFile}"
           |
-          |  echo "# prime" >>"$jobOutputDir/log.txt"
+          |  echo "# prime" >>"${jobItem.logFile}"
           |  {
           |    ${prelude.linesIterator.map(" " * 4 + _).mkString("\n")}
-          |  } &>>"$jobOutputDir/log.txt"
+          |  } &>>"${jobItem.logFile}"
 		  |
 		  |  if [[ $$(type -t _rtb_extra_flags) == function ]]; then
           |    export RTB_EXTRA_FLAGS=$$(_rtb_extra_flags)
           |  else
           |    export RTB_EXTRA_FLAGS=""
           |  fi
-		  |  echo "# RTB_CXX        =$$RTB_CXX"         &>>"$jobOutputDir/log.txt"
-		  |  echo "# RTB_CC         =$$RTB_CC"          &>>"$jobOutputDir/log.txt"
-		  |  echo "# RTB_EXTRA_FLAGS=$$RTB_EXTRA_FLAGS" &>>"$jobOutputDir/log.txt"
-		  |  
+		  |  echo "# RTB_CXX        =$$RTB_CXX"         &>>"${jobItem.logFile}"
+		  |  echo "# RTB_CC         =$$RTB_CC"          &>>"${jobItem.logFile}"
+		  |  echo "# RTB_EXTRA_FLAGS=$$RTB_EXTRA_FLAGS" &>>"${jobItem.logFile}"
+		  |
           |
-          |  source $jobFile
+          |  source "${sink.jobFile}"
           |
-          |  echo "# setup" >>"$jobOutputDir/log.txt"
-          |  _setup        &>>"$jobOutputDir/log.txt"
+          |  echo "# setup" >>"${jobItem.logFile}"
+          |  _setup        &>>"${jobItem.logFile}"
           |
           |  sync
           |
           |  for i in {1..$N}; do
-          |    echo "# run $$i" >>"$jobOutputDir/log.txt"
+          |    echo "# run $$i" >>"${jobItem.logFile}"
           |    (
-          |      (time _test &>>"$jobOutputDir/log.txt") &>"$jobOutputDir/time.$$i.json"
+          |      (time _test &>>"${jobItem.logFile}") &>"${jobItem.timeFile("$i")}"
           |    )
           |  done
           |
-          |  echo "# check" >>"$jobOutputDir/log.txt"
-          |  _check        &>>"$jobOutputDir/log.txt"
+          |  echo "# check" >>"${jobItem.logFile}"
+          |  _check        &>>"${jobItem.logFile}"
           |
-          |  rm -rf $jobWorkDir
+          |  rm -rf "$jobWorkDir"
           |
           |)
           |""".stripMargin
     )
   }
 
-  private def readEntry(keyIdx: Int, sink: JobSink, N: Int) = {
-    val times = sink.dir
+  private def readEntry(keyIdx: Int, item: JobItem, N: Int) = {
+    val times = item.dir
       .list(_.name match {
         case s"time.${_}.json" => true
         case _                 => false
       })
       .flatMap(f => Try(Pickler.read[Time](f.path)).toOption)
       .to(ArraySeq)
-    if (!sink.logFile.isRegularFile) {
-      sink.errorFile.writeText(s"Log file ${sink.logFile} does not exist or is not a regular file.")
+    if (!item.logFile.isRegularFile) {
+      item.errorFile.writeText(s"Log file ${item.logFile} does not exist or is not a regular file.")
       Left(keyIdx)
     } else if (times.size != N) {
-      sink.errorFile.writeText(
+      item.errorFile.writeText(
         s"Expecting $N time entries, but only ${times.size} parsed correctly, the script likely terminated early."
       )
       Left(keyIdx)
@@ -188,7 +195,6 @@ object Reactor {
       N: Int,
       runner: Runner
   ) = {
-
     val jobPredicates: Vector[(String, String) => Boolean] = jobFile.lineIterator
       .collect { case s"${_}#${_}RTB ${requirements}" => requirements.split(" ") }
       .flatten
@@ -206,63 +212,63 @@ object Reactor {
           case expected                   => expected == actual
         }
       }
-
+    val sink = JobSink((output / jobFile.nameWithoutExtension).createDirectoryIfNotExists())
     println(s"Running $jobFile")
 
-    jobFile.copyToDirectory(output)
-
-    val jobOutputDir = (output / jobFile.nameWithoutExtension)
-      .createDirectoryIfNotExists()
-      .clear()
-
-    val fixtureDir = jobOutputDir / "fixture"
-
-    val fixtureJobFile = (jobOutputDir / "exec.job")
-      .createFileIfNotExists(createParents = true)
-      .writeText(
-        s"""
+    // Job file invalidated, delete everything and start fresh.
+    val jobFileContent = jobFile.contentAsString
+    if (sink.jobFile.contentAsString != jobFileContent) {
+      println(s"\tJob file changed, clearing existing results.")
+      sink.dir.clear()
+    } else println(s"\tJob file unchanged, continuing...")
+    sink.jobFile.overwrite(jobFileContent)
+    sink.execFile.writeText(
+      s"""
            |
-           |mkdir -p $fixtureDir
-           |cd "$fixtureDir" || (echo "Cannot enter $fixtureDir" && exit 1)
+           |mkdir -p "${sink.fixtureDir}"
+           |cd "${sink.fixtureDir}" || (echo "Cannot enter ${sink.fixtureDir}" && exit 1)
            |
-           |source $jobFile
-           |echo "# fixture" >>"$jobOutputDir/log.txt"
-           |_fixture &>>"$jobOutputDir/log.txt"
+           |source "${sink.jobFile}"
+           |echo "# fixture" >>"${sink.logFile}"
+           |_fixture &>>"${sink.logFile}"
            |""".stripMargin
-      )
-
-    println("Setting up fixture...")
-    Process(s"bash $fixtureJobFile").!
-
+    )
+    println("\tSetting up fixture...")
+    Process(s"bash ${sink.execFile}").!
     val runScripts = mkRunScripts(
-      jobFile = jobFile,
+      sink = sink,
       scratchDir = scratch,
-      fixtureDir = fixtureDir,
-      outputDir = jobOutputDir,
       N = N,
       keyAndPrelude = keyAndPreludeFns.collect {
         case ((k, prelude, _), i) if jobPredicates.exists(_(k.name, k.version)) => (k, i) -> prelude
       }
     )
-
     runner match {
       case Runner.Local =>
-        val (failures, results) = runScripts.partitionMap { case ((key, keyIdx), sink, content) =>
-          val outputLns = mutable.ArrayBuffer[String]()
-          val exitCode  = Process(s"bash ${sink.execFile.writeText(content)}") ! ProcessLogger(outputLns += _)
-          println(s"\t${key.formatted} => $exitCode")
-          if (exitCode != 0) {
-            outputLns += s"# Process finished with exit code $exitCode"
-            sink.errorFile.writeText(outputLns.mkString("\n"))
-            Left(keyIdx)
-          } else readEntry(keyIdx, sink, N)
+        val (failures, results) = runScripts.partitionMap { case ((key, keyIdx), item, content) =>
+          if (item.execFile.contentAsString == content) {
+            println(s"\t${key.formatted} => skipped")
+            readEntry(keyIdx, item, N)
+          } else {
+            val outputLns = mutable.ArrayBuffer[String]()
+            val exitCode = Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _)
+            println(s"\t${key.formatted} => $exitCode")
+            if (exitCode != 0) {
+              outputLns += s"# Process finished with exit code $exitCode"
+              item.errorFile.writeText(outputLns.mkString("\n"))
+              Left(keyIdx)
+            } else readEntry(keyIdx, item, N)
+          }
         }
         println(s"\nAll jobs completed: failures=${failures.size}, successes=${results.size}")
-        Series[Int](jobFile.nameWithoutExtension, jobFile.name, jobFile.sha256, results, failures)
+        Series[Int](sink.jobFile.nameWithoutExtension, sink.jobFile.name, sink.jobFile.sha256, results, failures)
       case Runner.PbsTorque(template) =>
         val pbsPrelude = template.contentAsString
-        val pbsJobIds = runScripts.map { case (_, output, content) =>
-          val jobFile = output.execFile.writeText(
+        val (skipped, pending) = runScripts.partition { case (_, item, content) =>
+          item.execFile.contentAsString == content
+        }
+        val pbsJobIds = pending.map { case (_, item, content) =>
+          val jobFile = item.execFile.writeText(
             s"""
                |$pbsPrelude
                |
@@ -270,30 +276,49 @@ object Reactor {
                |""".stripMargin
           )
           Process(
-            s"qsub -o ${output.dir / "log.pbs.txt"} -e ${output.dir / "log.pbs.err.txt"} -V $jobFile"
+            s"qsub -o ${item.dir / "log.pbs.txt"} -e ${item.dir / "log.pbs.err.txt"} -V $jobFile"
           ).lazyLines.head // id
         }
+        println(s"Skipping jobs (${skipped.size}): ${skipped.map(_._1._1).mkString(",")}")
         println(s"Submitted jobs (${pbsJobIds.size}): ${pbsJobIds.mkString(",")}")
         pbsAwaitJobsCompleted(pbsJobIds) // wait for all tasks to complete by polling
-        val (failures, results) = runScripts.partitionMap { case ((_, idx), sink, _) =>
+        val (executedFailures, executedResults) = runScripts.partitionMap { case ((_, idx), sink, _) =>
           // concat pbs outputs with the main one
           appendToAndDeleteIfExists(sink.dir / "log.pbs.txt", "# PBS output", sink.logFile)
           appendToAndDeleteIfExists(sink.dir / "log.pbs.err.txt", "# PBS error", sink.errorFile)
           readEntry(idx, sink, N)
         }
-
-        println(s"\nAll jobs completed: failure=${failures.size}, success=${results.size}")
-        Series[Int](jobFile.nameWithoutExtension, jobFile.name, jobFile.sha256, results, failures)
+        val (skippedFailures, skippedResults) = skipped.partitionMap { case ((_, keyIdx), item, _) =>
+          readEntry(keyIdx, item, N)
+        }
+        println(s"""
+				 |All jobs completed: 
+				 |\tExecuted: Failure=${executedFailures.size}, Success=${executedResults.size}
+				 |\tSkipped : Failure=${skippedFailures.size}, Success=${skippedResults.size}""".stripMargin)
+        Series[Int](
+          sink.jobFile.nameWithoutExtension,
+          sink.jobFile.name,
+          sink.jobFile.sha256,
+          executedResults ++ skippedResults,
+          executedFailures ++ skippedFailures
+        )
     }
   }
 
   // dataset structure:
-  // runnerInfo.txt
-  // dataset.json
-  // $job/$key
-  //   - exec.job
-  //   - log.txt
-  //   - time.$N.json
+  //   $job.sh[]...
+  //   runnerInfo.txt
+  //   dataset.json
+  //   $job/
+  //      input.job.sh
+  //      exec.job
+  //      log.txt
+  //      fixture/
+  //        - ...
+  //      $key/
+  //        - exec.job
+  //        - log.txt
+  //        - time.$N.json
   private def execute(config: Config): Unit = {
 
     val allowedProviders = config.providers().toSet
@@ -328,8 +353,8 @@ object Reactor {
       sys.exit(1)
     }
 
-    config.output().createDirectoryIfNotExists(createParents = true).clear()
     config.scratch().createDirectoryIfNotExists(createParents = true).clear()
+    config.output().createDirectoryIfNotExists(createParents = true)
 
     println(s"Collecting runnerInfo...")
     val runnerInfoFile = (config.output() / "runnerInfo.txt").createFileIfNotExists(createParents = true)

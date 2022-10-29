@@ -41,12 +41,12 @@ object SnapshotProviders {
 
   val LLVM = new GHReleaseProvider(
     name = "llvm",
-    repoAndOwner = "tom91136/snapshots",
+    repoAndOwner = "UoB-HPC/compiler-snapshots",
     tagsToKeys = _.collect {
-      case tag @ s"$name-$version+${isoBasicDate}Z+$commit" if name == "llvm" =>
+      case tag @ s"$name-$version.${isoBasicDate}Z.$commit" if name == "llvm" =>
         tag -> Key(name, version, LocalDate.parse(isoBasicDate), Some(commit))
     },
-    tagAndKeyToAssetUri = (tag, _) => s"${tag.replace('+', '.')}.tar.xz",
+    tagAndKeyToAssetUri = (tag, _) => s"$tag.tar.xz",
     pathAndKeyToPrelude = (p, _) => s"""
          |tar xf $p
          |
@@ -66,12 +66,12 @@ object SnapshotProviders {
 
   val GCC = new GHReleaseProvider(
     name = "gcc",
-    repoAndOwner = "tom91136/snapshots",
+    repoAndOwner = "UoB-HPC/compiler-snapshots",
     tagsToKeys = _.collect {
-      case tag @ s"$name-$version+${isoBasicDate}Z+$commit" if name == "gcc" =>
+      case tag @ s"$name-$version.${isoBasicDate}Z.$commit" if name == "gcc" =>
         tag -> Key(name, version, LocalDate.parse(isoBasicDate), Some(commit))
     },
-    tagAndKeyToAssetUri = (tag, _) => s"${tag.replace('+', '.')}.tar.xz",
+    tagAndKeyToAssetUri = (tag, _) => s"$tag.tar.xz",
     pathAndKeyToPrelude = (p, _) => s"""
          |tar xf $p
          |
