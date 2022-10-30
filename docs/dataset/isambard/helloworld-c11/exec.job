@@ -1,8 +1,0 @@
-
-
-mkdir -p /lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/helloworld-c11/fixture
-cd "/lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/helloworld-c11/fixture" || (echo "Cannot enter /lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/helloworld-c11/fixture" && exit 1)
-
-source /lustre/home/br-wlin/race-to-binary/input/isambard/helloworld-c11.job.sh
-echo "# fixture" >>"/lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/helloworld-c11/log.txt"
-_fixture &>>"/lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/helloworld-c11/log.txt"

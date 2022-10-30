@@ -37,3 +37,5 @@ output/
 cache/
 dataset-*/
 dataset/
+
+docs/

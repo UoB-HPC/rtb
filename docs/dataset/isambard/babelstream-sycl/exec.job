@@ -1,8 +1,0 @@
-
-
-mkdir -p /lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/babelstream-sycl/fixture
-cd "/lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/babelstream-sycl/fixture" || (echo "Cannot enter /lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/babelstream-sycl/fixture" && exit 1)
-
-source /lustre/home/br-wlin/race-to-binary/input/isambard/babelstream-sycl.job.sh
-echo "# fixture" >>"/lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/babelstream-sycl/log.txt"
-_fixture &>>"/lustre/home/br-wlin/race-to-binary/dataset-p3-login-20220925/isambard/babelstream-sycl/log.txt"

@@ -268,7 +268,7 @@ object Reactor {
           } else executeJobItem()
         }
         println(s"\nAll jobs completed: failures=${failures.size}, successes=${results.size}")
-        Series[Int](sink.jobFile.nameWithoutExtension, sink.jobFile.name, sink.jobFile.sha256, results, failures)
+        Series[Int](sink.dir.name, sink.jobFile.name, sink.jobFile.sha256.toLowerCase, results, failures)
       case Runner.PbsTorque(template) =>
         val pbsPrelude = template.contentAsString
         val (skipped, pending) = runScripts.partition { case (_, item, content) =>

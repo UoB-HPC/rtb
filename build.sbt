@@ -48,8 +48,8 @@ lazy val model = crossProject(JSPlatform, JVMPlatform)
 lazy val reactor = project
   .settings(
     commonSettings,
-    name                       := "reactor",
-    assembly / assemblyJarName := "reactor.jar",
+    name                          := "reactor",
+    assembly / assemblyOutputPath := baseDirectory.value / "reactor.jar",
     assemblyMergeStrategy := {
       case PathList("META-INF", "versions", "9", "module-info.class") => MergeStrategy.discard
       case x =>
@@ -157,13 +157,9 @@ lazy val webapp = project
       val index           = "index.html"
       val publicResources = baseDirectory.value / "src/main/js/public/"
 
-      Files
-        .list(publicResources.toPath)
-        .filter(_.getFileName.toString != index)
-        .filter(_.getFileName.toString != ".gitignore")
-        .forEach { p =>
-          Files.copy(p, (distFolder / p.getFileName.toString).toPath, REPLACE_EXISTING)
-        }
+      Files.list(publicResources.toPath).filter(_.getFileName.toString != index).forEach { p =>
+        Files.copy(p, (distFolder / p.getFileName.toString).toPath, REPLACE_EXISTING)
+      }
 
       val indexFrom = publicResources / index
       val indexTo   = distFolder / index
