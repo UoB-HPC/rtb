@@ -19,7 +19,7 @@ object DatasetElements {
       minWidth := width.px,
       maxWidth := width.px,
       div(cls := "message-header", height := 2.5.em, header),
-      div(cls := "message-body", height   := 100.pct, body)
+      div(cls := "message-body", height   := 100.pct, padding := 8.px, body)
     )
 
   def rightControlContainer(header: ReactiveHtmlElement[_])(body: ReactiveHtmlElement[_]) =
@@ -29,7 +29,7 @@ object DatasetElements {
       margin   := "8px 16px 8px 8px",
       cls      := "message",
       div(cls := "message-header", height := 2.5.em, header),
-      div(cls := "message-body", height   := 100.pct, body)
+      div(cls := "message-body", height   := 100.pct, padding := 0.px, paddingBottom := 16.px, body)
     )
 
   def focusPanelHeader(key: Key, current: FocusGroup, navigate: FocusGroup => Binder[HtmlElement]) = Seq(
@@ -58,11 +58,10 @@ object DatasetElements {
     )
   )
 
-  def focusCompilerPanel(dataset: Dataset, index: Int) = {
+  def focusCompilerPanel(dataset: Dataset, key: Key) = {
     val grouped =
       dataset.providers.groupBy(x => x._1.name -> x._1.version).map((k, xs) => k -> xs.sortBy(_._1.date))
 
-    val entry @ (key, size) = dataset.providers(index)
     val file =
       s"${key.name}-${key.version}.${key.date.format(DateTimeFormatter.ISO_DATE)}Z.${key.extra.getOrElse("")}"
 
@@ -100,11 +99,11 @@ object DatasetElements {
       )
     }
 
-    val diff = grouped.get(key.name -> key.version).map(xs => xs -> xs.indexOf(entry)) match {
+    val diff = grouped.get(key.name -> key.version).map(xs => xs -> xs.indexWhere(_._1 == key)) match {
       case Some((xs, n)) if n > 0 => // excludes 0 because 0 doesn't have a parent commit
         for {
           from    <- xs(n - 1)._1.extra
-          to      <- dataset.providers(index)._1.extra
+          to      <- xs(n)._1.extra
           diffUrl <- repoBaseUrl.map(u => s"$u/compare/$from..$to")
         } yield a(s"View $from..$to on GitHub", target := "_blank", href := diffUrl)
       case _ => None
@@ -117,7 +116,7 @@ object DatasetElements {
       tbody(
         tr(
           td("Diff"),
-          td(diff)
+          td(diff.getOrElse("N/A (initial data point)"))
         ),
         tr(
           td("Commits (", child.text <-- build.map(_.changes.size.toString), ")"),

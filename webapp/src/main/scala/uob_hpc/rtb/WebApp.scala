@@ -74,17 +74,18 @@ object WebApp {
   }
   object PerfFocus {
     given ReadWriter[PerfFocus] = macroRW
-    def apply(path: String): Option[PerfFocus] = { 
+    def apply(path: String): Option[PerfFocus] = {
       println(s"Dec:${path}")
       path match {
-      case s"$job^$name^$version^$index^$group" =>
-        for {
-          g <- FocusGroup(group)
-          i <- index.toIntOption
-        } yield PerfFocus(job, name, version, i, g)
-      case _ => None
+        case s"$job^$name^$version^$index^$group" =>
+          for {
+            g <- FocusGroup(group)
+            i <- index.toIntOption
+          } yield PerfFocus(job, name, version, i, g)
+        case _ => None
+      }
     }
-  }}
+  }
 
   case class SizeFocus(index: Int, group: FocusGroup) {
     def asPath = s"$index^${group.name}"
@@ -279,8 +280,6 @@ object WebApp {
   @js.native
   private object IndexMD extends js.Object { def default: String = js.native }
 
-  import typings.prismjs.{global => PrismGlobal}
-
   @main def main(): Unit = {
 
     // XXX keep a reference to these
@@ -307,6 +306,24 @@ object WebApp {
       |
       |.datapoint .focused {
       |   transform: scale(1.5);
+      |}
+	  |
+	  |/* Prevent Bulma classes from breaking PrismJS's styles */
+	  |pre code [class~=token] {
+      |  font: inherit;
+      |  background: inherit;
+	  |  align-items: inherit;
+      |  background-color: inherit;
+      |  border-radius: inherit;
+      |  display: inherit;
+      |  font-size: inherit;
+      |  height: inherit;
+      |  justify-content: inherit;
+      |  margin-right: inherit;
+      |  min-width: inherit;
+      |  padding: inherit;
+      |  text-align: inherit;
+      |  vertical-align: inherit;
       |}
       |
       |""".stripMargin

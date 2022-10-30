@@ -78,13 +78,13 @@ object SizeElement {
             overflowY.scroll,
             height := 100.pct,
             child <-- page.map(_.focus).map {
-              case None => "Select a data point in the chart for details."
+              case None => span("Select a data point in the chart for details.", margin := 16.px)
               case Some(state) =>
                 state.group match {
                   case FocusGroup.Compiler =>
-                    DatasetElements.focusCompilerPanel(dataset, state.index)
+                    DatasetElements.focusCompilerPanel(dataset, dataset.providers(state.index)._1)
                   case FocusGroup.Output =>
-                    val entry @ (key, size) = dataset.providers(state.index)
+                    val (key, size) = dataset.providers(state.index)
                     val file =
                       s"${key.name}-${key.version}.${key.date.format(DateTimeFormatter.ISO_DATE)}Z.${key.extra.getOrElse("")}"
                     table(
@@ -103,7 +103,7 @@ object SizeElement {
                         ),
                         tr(
                           td("Size"),
-                          td(f"${(size.toDouble / 1024 / 1024)}%.2f MB (${(size.toDouble / 1000 / 1000)}%.2f MiB)")
+                          td(f"${size.toDouble / 1024 / 1024}%.2f MB (${size.toDouble / 1000 / 1000}%.2f MiB)")
                         )
                       )
                     )
@@ -141,7 +141,7 @@ object SizeElement {
                         }
                         .mkString(",")
                       if ((job.length + vers.length) > limit) job :: vers :: Nil
-                      else s"$job (${vers})" :: Nil
+                      else s"$job ($vers)" :: Nil
                     }
                     .toList,
                 dateFn = _._1.date,

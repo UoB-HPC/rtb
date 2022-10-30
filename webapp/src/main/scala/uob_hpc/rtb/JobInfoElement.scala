@@ -23,7 +23,8 @@ object JobInfoElement {
         selected match {
           case None => jobInfo.set(Deferred.Success(None))
           case Some(name) =>
-            fetchRaw(s"./dataset/${info.series}/${allJobs(name)}").onComplete(x =>
+            println(allJobs)
+            fetchRaw(s"./dataset/${info.series}/$name/${allJobs(name)}").onComplete(x =>
               jobInfo.set(x match {
                 case Failure(e) => Deferred.Error(e)
                 case Success(x) => Deferred.Success(Some(x))

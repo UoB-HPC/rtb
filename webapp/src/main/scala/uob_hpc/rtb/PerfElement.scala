@@ -1,7 +1,9 @@
 package uob_hpc.rtb
 
+import com.raquo.airstream.web.AjaxEventStream
 import com.raquo.laminar.api.L.*
 import uob_hpc.rtb.WebApp.{FocusGroup, Page, PerfFocus, ViewState}
+
 import scala.collection.immutable.SortedSet
 
 object PerfElement {
@@ -15,6 +17,19 @@ object PerfElement {
       case (_, Deferred.Pending)  => DatasetElements.loading
       case (series, Deferred.Success(dataset)) =>
         val allSeries = dataset.swizzledSeries(series)
+
+        val seriesSig = page.map(_.state).map { state =>
+          allSeries
+            .filter(s => state.jobs.contains(s.jobName))
+            .map { s =>
+              s.results.groupBy(e => e.key.name -> e.key.version).collect {
+                case (k @ (n, v), xs) if state.versions.contains(k) =>
+                  (s.jobName, n, v) -> xs.sortBy(_.key.date)
+              }
+            }
+            .reduceOption(_ ++ _)
+            .getOrElse(Map.empty)
+        }
 
         val compilers = DatasetElements.compilerSelect(
           allSeries,
@@ -81,12 +96,11 @@ object PerfElement {
             alignItems.center,
             justifyContent.flexEnd,
             width := 100.pct,
-            children <-- page.map {
-              case Page.Perf(_, _, None) => Seq(span(" -- "))
-              case page @ Page.Perf(_, _, Some(state)) =>
-                val entry @ (key, _) = dataset.providers(state.index)
+            children <-- page.combineWith(seriesSig).map {
+              case (Page.Perf(_, _, None), _) => Seq(span(" -- "))
+              case (page @ Page.Perf(_, _, Some(state)), xs) =>
                 DatasetElements.focusPanelHeader(
-                  key,
+                  xs((state.job, state.name, state.version))(state.index).key,
                   state.group,
                   g => WebApp.navigateTo(page.copy(focus = Some(state.copy(group = g))))
                 )
@@ -96,16 +110,35 @@ object PerfElement {
           div(
             overflowY.scroll,
             height := 100.pct,
-            child <-- page.map(_.focus).map {
-              case None => "Select a data point in the chart for details."
-              case Some(state) =>
-                state.group match {
-                  case FocusGroup.Compiler =>
-                    DatasetElements.focusCompilerPanel(dataset, state.index)
-                  case FocusGroup.Output =>
-                    div()
-                }
-            }
+            child <-- page
+              .map(_.focus)
+              .combineWith(seriesSig)
+              .map {
+                case (None, _) => span("Select a data point in the chart for details.", margin := 16.px)
+                case (Some(state), xs) =>
+                  val element = xs((state.job, state.name, state.version))(state.index)
+                  println(element)
+                  state.group match {
+                    case FocusGroup.Compiler =>
+                      DatasetElements.focusCompilerPanel(dataset, element.key)
+                    case FocusGroup.Output =>
+                      div(
+                        child <-- AjaxEventStream
+                          .get(s"./dataset/${series}/${state.job}/${element.key.formatted}/log.txt")
+                          .map(_.responseText)
+                          .map { xs =>
+                            pre(
+                              cls := "line-numbers",
+                              whiteSpace.preWrap,
+                              margin        := 0.px,
+                              paddingBottom := 64.px,
+                              code(cls := "language-bash", xs),
+                              onMountCallback(c => typings.prismjs.mod.highlightAllUnder(c.thisNode.ref))
+                            )
+                          }
+                      )
+                  }
+              }
           )
         }
 
@@ -114,18 +147,7 @@ object PerfElement {
           flexGrow := 1,
           flexDirection.column,
           DatasetElements.chartContainer { case (dim, owner) =>
-            dim.combineWith(page.map(_.state)).map { case (w, h, state) =>
-              val xs = allSeries
-                .filter(s => state.jobs.contains(s.jobName))
-                .map { s =>
-                  s.results.groupBy(e => e.key.name -> e.key.version).collect {
-                    case (k @ (n, v), xs) if state.versions.contains(k) =>
-                      (s.jobName, n, v) -> xs.sortBy(_.key.date)
-                  }
-                }
-                .reduceOption(_ ++ _)
-                .getOrElse(Map.empty)
-
+            dim.combineWith(page.map(_.state), seriesSig).map { case (w, h, state, xs) =>
               DateSeriesChartElement(
                 yLabel = "Compilation time (seconds)",
                 dayWidth = state.scale.getOrElse(2d),
@@ -144,7 +166,7 @@ object PerfElement {
                         }
                         .mkString(",")
                       if ((job.length + vers.length) > limit) job :: vers :: Nil
-                      else s"$job (${vers})" :: Nil
+                      else s"$job ($vers)" :: Nil
                     }
                     .toList,
                 dateFn = _.key.date,
