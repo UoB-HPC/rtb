@@ -48,7 +48,7 @@ object SnapshotProviders {
     },
     tagAndKeyToAssetUri = (tag, _) => s"$tag.tar.xz",
     pathAndKeyToPrelude = (p, _) => s"""
-         |tar xf $p
+         |eval "$${TAR_XZ_COMMAND:-"tar -xf"} \\"$p\\""
          |
          |root=$$(readlink -f opt/*)
          |echo "Compiler root:$$root"
@@ -73,7 +73,7 @@ object SnapshotProviders {
     },
     tagAndKeyToAssetUri = (tag, _) => s"$tag.tar.xz",
     pathAndKeyToPrelude = (p, _) => s"""
-         |tar xf $p
+		 |eval "$${TAR_XZ_COMMAND:-"tar -xf"} \\"$p\\""
          |
          |root=$$(readlink -f opt/*)
          |echo "Compiler root:$$root"
