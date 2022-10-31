@@ -106,16 +106,16 @@ object Reactor {
           |  {
           |    ${prelude.linesIterator.map(" " * 4 + _).mkString("\n")}
           |  } &>>"${jobItem.logFile}"
-		  |
-		  |  if [[ $$(type -t _rtb_extra_flags) == function ]]; then
+          |
+          |  if [[ $$(type -t _rtb_extra_flags) == function ]]; then
           |    export RTB_EXTRA_FLAGS=$$(_rtb_extra_flags)
           |  else
           |    export RTB_EXTRA_FLAGS=""
           |  fi
-		  |  echo "# RTB_CXX        =$$RTB_CXX"         &>>"${jobItem.logFile}"
-		  |  echo "# RTB_CC         =$$RTB_CC"          &>>"${jobItem.logFile}"
-		  |  echo "# RTB_EXTRA_FLAGS=$$RTB_EXTRA_FLAGS" &>>"${jobItem.logFile}"
-		  |
+          |  echo "# RTB_CXX        =$$RTB_CXX"         &>>"${jobItem.logFile}"
+          |  echo "# RTB_CC         =$$RTB_CC"          &>>"${jobItem.logFile}"
+          |  echo "# RTB_EXTRA_FLAGS=$$RTB_EXTRA_FLAGS" &>>"${jobItem.logFile}"
+          |
           |
           |  source "${sink.jobFile}"
           |
@@ -299,9 +299,9 @@ object Reactor {
           readEntry(keyIdx, item, N)
         }
         println(s"""
-				 |All jobs completed: 
-				 |\tExecuted: Failure=${executedFailures.size}, Success=${executedResults.size}
-				 |\tSkipped : Failure=${skippedFailures.size}, Success=${skippedResults.size}""".stripMargin)
+                 |All jobs completed: 
+                 |\tExecuted: Failure=${executedFailures.size}, Success=${executedResults.size}
+                 |\tSkipped : Failure=${skippedFailures.size}, Success=${skippedResults.size}""".stripMargin)
         Series[Int](
           sink.jobFile.nameWithoutExtension,
           sink.jobFile.name,

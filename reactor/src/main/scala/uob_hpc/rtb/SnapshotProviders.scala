@@ -26,15 +26,15 @@ object SnapshotProviders {
          |tar xf $p
          |
          |export root="$$PWD/dpcpp_compiler"
-		 |echo "Compiler root:$$root"
-		 |
+         |echo "Compiler root:$$root"
+         |
          |export PATH="$$root/bin:$${PATH:-}"
          |export CPATH="$$root/include:$${CPATH:-}"
          |export LIBRARY_PATH="$$root/lib:$${LIBRARY_PATH:-}"
          |
          |export RTB_CXX="$$root/bin/clang++"
          |export RTB_CC="$$root/bin/clang"
-		 |
+         |
          |"$$RTB_CXX" -v
          |""".stripMargin
   )
@@ -73,7 +73,7 @@ object SnapshotProviders {
     },
     tagAndKeyToAssetUri = (tag, _) => s"$tag.tar.xz",
     pathAndKeyToPrelude = (p, _) => s"""
-		 |eval "$${TAR_XZ_COMMAND:-"tar -xf"} \\"$p\\""
+         |eval "$${TAR_XZ_COMMAND:-"tar -xf"} \\"$p\\""
          |
          |root=$$(readlink -f opt/*)
          |echo "Compiler root:$$root"
