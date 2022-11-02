@@ -249,7 +249,9 @@ object Reactor {
             val outputLns = mutable.ArrayBuffer[String]()
             val (exitCode, elapsed) =
               timed(Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _))
-            println(f"\t${key.formatted} => exit=$exitCode ($elapsed%.2f s)")
+            println(
+              f"\t${key.formatted} => exit=$exitCode ($elapsed%.2fs, $keyIdx/${runScripts.size}, ${(keyIdx.toDouble / runScripts.size * 100)}%.1f%%)"
+            )
             if (exitCode != 0) {
               outputLns += s"# Process finished with exit code $exitCode"
               item.errorFile.writeText(outputLns.mkString("\n"))
@@ -344,8 +346,6 @@ object Reactor {
         )
       )
       .to(ArraySeq)
-    val keysWithIndex = keys.zipWithIndex
-
     val jobFilesGroups = config
       .input()
       .listRecursively
@@ -406,7 +406,7 @@ object Reactor {
         jobFiles.map(f =>
           execJob(
             jobFile = f,
-            keyAndPreludeFns = keysWithIndex,
+            keyAndPreludeFns = keys.zipWithIndex,
             output = (config.output() / group).createDirectoryIfNotExists(),
             scratch = config.scratch(),
             N = config.repeat(),

@@ -1,6 +1,9 @@
 #!/bin/bash
 # RTB gcc llvm
 
+# This job compiles the OpenMP version of BabelStream, the specific source file used is available at:
+# https://github.com/UoB-HPC/BabelStream/blob/1b67999/src/omp/OMPStream.cpp
+
 gh_owner="UoB-HPC"
 gh_repo="BabelStream"
 commit="1b67999"

@@ -1,6 +1,10 @@
 #!/bin/bash
 # RTB gcc llvm
 
+# This job compiles the C++17 PSTL (via std::for_each and a parallel execution policy) version of
+# miniBUDE, the specific source file used is available at:
+# https://github.com/UoB-HPC/miniBUDE/blob/ecd62a6/src/std-indices/fasten.hpp
+
 gh_owner="UoB-HPC"
 gh_repo="miniBUDE"
 commit="ecd62a6"

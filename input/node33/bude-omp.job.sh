@@ -1,6 +1,9 @@
 #!/bin/bash
 # RTB gcc llvm
 
+# This job compiles the OpenMP version of miniBUDE, the specific source file used is available at:
+# https://github.com/UoB-HPC/miniBUDE/blob/ecd62a6/src/omp/fasten.hpp
+
 gh_owner="UoB-HPC"
 gh_repo="miniBUDE"
 commit="ecd62a6"

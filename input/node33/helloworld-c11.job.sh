@@ -1,6 +1,8 @@
 #!/bin/bash
 # RTB gcc llvm dpcpp
 
+# A basic hello world baseline in C
+
 _fixture() { :; }
 
 _setup() { :; }

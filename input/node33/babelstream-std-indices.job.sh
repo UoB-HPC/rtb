@@ -1,6 +1,10 @@
 #!/bin/bash
 # RTB gcc llvm
 
+# This job compiles the C++17 PSTL (via std::transform and a parallel execution policy) version of
+# BabelStream, the specific source file used is available at:
+# https://github.com/UoB-HPC/BabelStream/blob/1b67999/src/std-indices/STDIndicesStream.cpp
+
 gh_owner="UoB-HPC"
 gh_repo="BabelStream"
 commit="1b67999"
