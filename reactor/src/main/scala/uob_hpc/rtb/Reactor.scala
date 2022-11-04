@@ -248,7 +248,7 @@ object Reactor {
           def executeJobItem() = {
             val outputLns = mutable.ArrayBuffer[String]()
             item.execFile.writeText(template.fold(content)(t => s"""
-                 |$t
+                 |${t.contentAsString}
                  |$content
                  |""".stripMargin))
             val (exitCode, elapsed) = timed(Process(s"bash ${item.execFile}") ! ProcessLogger(outputLns += _))
@@ -382,7 +382,7 @@ object Reactor {
     config.runner() match {
       case Runner.Local(template) =>
         runnerInfoJobFile.writeText(template.fold(runnerInfoScript)(t => s"""
-             |$t
+             |${t.contentAsString}
              |$runnerInfoScript
              |""".stripMargin))
         val outputLns = mutable.ArrayBuffer[String]()
