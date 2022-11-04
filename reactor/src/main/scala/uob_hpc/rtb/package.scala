@@ -14,6 +14,6 @@ trait CompilerProvider {
 }
 
 enum Runner {
-  case Local
+  case Local(template: Option[File]) extends Runner
   case PbsTorque(template: File) extends Runner
 }

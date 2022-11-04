@@ -1,5 +1,5 @@
 #!/bin/bash
-# RTB gcc llvm
+# RTB gcc>=10 llvm
 
 # This job compiles the C++17 PSTL (via std::for_each and a parallel execution policy) version of
 # miniBUDE, the specific source file used is available at:

@@ -1,0 +1,7 @@
+
+_rtb_extra_flags() {
+  case "$RTB_CXX" in
+  *clang\+\+ | *clang) echo "--gcc-toolchain=/nfs/software/x86_64/gcc/10.1.0/" ;;
+  *) echo "" ;;
+  esac
+}

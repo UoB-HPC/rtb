@@ -16,9 +16,10 @@ object Reactor {
   import org.rogach.scallop.*
 
   given ValueConverter[Runner] = singleArgConverter {
-    case "local"          => Runner.Local
-    case s"pbs:$template" => Runner.PbsTorque(File(template))
-    case bad              => throw new IllegalArgumentException(s"Unsupported runner: $bad")
+    case s"local:$template" => Runner.Local(Some(File(template)))
+    case "local"            => Runner.Local(None)
+    case s"pbs:$template"   => Runner.PbsTorque(File(template))
+    case bad                => throw new IllegalArgumentException(s"Unsupported runner: $bad")
   }
   given ValueConverter[File] = singleArgConverter(File(_))
 
@@ -44,11 +45,11 @@ object Reactor {
       descr = "Cache dir for storing providers"
     )
     val repeat: ScallopOption[Int] = opt( //
-      default = Some(5),
+      default = Some(4),
       descr = "How many iterations of the timed section in a job is executed"
     )
     val runner: ScallopOption[Runner] = opt( //
-      default = Some(Runner.Local),
+      default = Some(Runner.Local(None)),
       descr = s"Runner for executing the job, either local or pbs:<path_to_job_template>"
     )
     val providers: ScallopOption[Vector[String]] = opt( //
@@ -66,7 +67,6 @@ object Reactor {
     def jobFile: File    = (dir / "input.job.sh").createFileIfNotExists()
     def execFile: File   = (dir / "exec.job").createFileIfNotExists()
     def logFile: File    = (dir / "log.txt").createFileIfNotExists()
-    def errorFile: File  = (dir / "log.err.txt").createFileIfNotExists()
     def fixtureDir: File = (dir / "fixture").createDirectoryIfNotExists()
     def item(k: Key)     = JobItem((dir / k.formatted).createDirectoryIfNotExists())
   }
@@ -95,7 +95,7 @@ object Reactor {
           |TIMEFORMAT='{"realS":%R,"userS":%U,"systemS":%S}'
           |(
           |
-          |  rm -rf "$jobWorkDir"
+          |  rm -rf "$scratchDir"
           |  mkdir -p "$jobWorkDir"
           |  cd "$jobWorkDir" || (echo "Cannot enter $jobWorkDir" && exit 1)
           |
@@ -243,14 +243,17 @@ object Reactor {
       }
     )
     runner match {
-      case Runner.Local =>
+      case Runner.Local(template) =>
         val (failures, results) = runScripts.partitionMap { case ((key, keyIdx), item, content) =>
           def executeJobItem() = {
             val outputLns = mutable.ArrayBuffer[String]()
-            val (exitCode, elapsed) =
-              timed(Process(s"bash ${item.execFile.writeText(content)}") ! ProcessLogger(outputLns += _))
+            item.execFile.writeText(template.fold(content)(t => s"""
+                 |$t
+                 |$content
+                 |""".stripMargin))
+            val (exitCode, elapsed) = timed(Process(s"bash ${item.execFile}") ! ProcessLogger(outputLns += _))
             println(
-              f"\t${key.formatted} => exit=$exitCode ($elapsed%.2fs, $keyIdx/${runScripts.size}, ${(keyIdx.toDouble / runScripts.size * 100)}%.1f%%)"
+              f"\t${key.formatted} => exit=$exitCode ($elapsed%.2fs, $keyIdx/${runScripts.size}, ${keyIdx.toDouble / runScripts.size * 100}%.1f%%)"
             )
             if (exitCode != 0) {
               outputLns += s"# Process finished with exit code $exitCode"
@@ -370,14 +373,18 @@ object Reactor {
     val runnerInfoFile = (config.output() / "runnerInfo.txt").createFileIfNotExists(createParents = true)
     val runnerInfoScript =
       """
-        |uname -a
+        |hostname
+		|uname -a
         |lscpu
         |df -h
         |""".stripMargin
     val runnerInfoJobFile = (config.output() / "runnerInfo.job").createFileIfNotExists(createParents = true)
     config.runner() match {
-      case Runner.Local =>
-        runnerInfoJobFile.writeText(runnerInfoScript)
+      case Runner.Local(template) =>
+        runnerInfoJobFile.writeText(template.fold(runnerInfoScript)(t => s"""
+             |$t
+             |$runnerInfoScript
+             |""".stripMargin))
         val outputLns = mutable.ArrayBuffer[String]()
         Process(s"bash $runnerInfoJobFile") ! ProcessLogger(outputLns += _) // ignore errors here
         runnerInfoFile.writeText(outputLns.mkString("\n"))
@@ -393,10 +400,6 @@ object Reactor {
         appendToAndDeleteIfExists(config.output() / "runnerInfo.pbs.txt", "# PBS output", runnerInfoFile)
         appendToAndDeleteIfExists(config.output() / "runnerInfo.pbs.err.txt", "# PBS error", runnerInfoFile)
     }
-
-//    (Process("uname -a") #>> runnerInfoFile.toJava).!
-//    (Process("lscpu") #>> runnerInfoFile.toJava).!
-//    (Process("df -h") #>> runnerInfoFile.toJava).!
 
     println(s"Using job files:\n${jobFilesGroups.map("\t" + _).mkString("\n")}")
 
