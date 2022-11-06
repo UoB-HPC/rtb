@@ -3,6 +3,7 @@ package uob_hpc.rtb
 import better.files.File
 
 import java.net.InetAddress
+import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeFormatter
 import java.time.temporal.IsoFields
 import java.time.{LocalDate, ZoneOffset}
@@ -72,10 +73,10 @@ object Reactor {
   }
 
   private case class JobItem(dir: File) {
-    def timeFile(n: String): File = dir / s"time.$n.json"
-    def execFile: File            = (dir / "exec.job").createFileIfNotExists()
-    def logFile: File             = (dir / "log.txt").createFileIfNotExists()
-    def errorFile: File           = (dir / "log.err.txt").createFileIfNotExists()
+    def timesFile: File = dir / s"times.jsonl"
+    def execFile: File  = (dir / "exec.job").createFileIfNotExists()
+    def logFile: File   = (dir / "log.txt").createFileIfNotExists()
+//    def errorFile: File           = (dir / "log.err.txt").createFileIfNotExists()
   }
 
   private def mkRunScripts(
@@ -124,10 +125,11 @@ object Reactor {
           |
           |  sync
           |
+          |  :> ${jobItem.timesFile}
           |  for i in {1..$N}; do
           |    echo "# run $$i" >>"${jobItem.logFile}"
           |    (
-          |      (time _test &>>"${jobItem.logFile}") &>"${jobItem.timeFile("$i")}"
+          |      (time _test &>>"${jobItem.logFile}") &>>"${jobItem.timesFile}"
           |    )
           |  done
           |
@@ -141,20 +143,17 @@ object Reactor {
     )
   }
 
-  private def readEntry(keyIdx: Int, item: JobItem, N: Int) = {
-    val times = item.dir
-      .list(_.name match {
-        case s"time.${_}.json" => true
-        case _                 => false
-      })
-      .flatMap(f => Try(Pickler.read[Time](f.path)).toOption)
+  private def readEntry(keyIdx: Int, item: JobItem, N: Int) = if (!item.logFile.isRegularFile) {
+    item.logFile.appendText(s"# Log file ${item.logFile} does not exist or is not a regular file.")
+    Left(keyIdx)
+  } else {
+    val times = item.timesFile
+      .lines(StandardCharsets.UTF_8)
+      .flatMap(line => Try(Pickler.read[Time](line)).toOption)
       .to(ArraySeq)
-    if (!item.logFile.isRegularFile) {
-      item.errorFile.writeText(s"Log file ${item.logFile} does not exist or is not a regular file.")
-      Left(keyIdx)
-    } else if (times.size != N) {
-      item.errorFile.writeText(
-        s"Expecting $N time entries, but only ${times.size} parsed correctly, the script likely terminated early."
+    if (times.size != N) {
+      item.logFile.appendText(
+        s"# Expecting $N time entries, but only ${times.size} parsed correctly, the script likely terminated early."
       )
       Left(keyIdx)
     } else Right(Entry[Int](key = keyIdx, times = times))
@@ -244,24 +243,27 @@ object Reactor {
     )
     runner match {
       case Runner.Local(template) =>
-        val (failures, results) = runScripts.partitionMap { case ((key, keyIdx), item, content) =>
+        val (failures, results) = runScripts.zipWithIndex.partitionMap { case (((key, keyIdx), item, content), index) =>
+          val contentWithTemplateApplied = template.fold(content)(t => s"""
+               |
+               |${t.contentAsString}
+               |
+               |$content
+               |""".stripMargin)
           def executeJobItem() = {
             val outputLns = mutable.ArrayBuffer[String]()
-            item.execFile.writeText(template.fold(content)(t => s"""
-                 |${t.contentAsString}
-                 |$content
-                 |""".stripMargin))
+            item.execFile.writeText(contentWithTemplateApplied)
             val (exitCode, elapsed) = timed(Process(s"bash ${item.execFile}") ! ProcessLogger(outputLns += _))
             println(
-              f"\t${key.formatted} => exit=$exitCode ($elapsed%.2fs, $keyIdx/${runScripts.size}, ${keyIdx.toDouble / runScripts.size * 100}%.1f%%)"
+              f"\t${key.formatted} => exit=$exitCode ($elapsed%.2fs, $index/${runScripts.size}, ${index.toDouble / runScripts.size * 100}%.1f%%)"
             )
             if (exitCode != 0) {
               outputLns += s"# Process finished with exit code $exitCode"
-              item.errorFile.writeText(outputLns.mkString("\n"))
+              item.logFile.appendText(outputLns.mkString("\n"))
               Left(keyIdx)
             } else readEntry(keyIdx, item, N)
           }
-          if (item.execFile.contentAsString == content) {
+          if (item.execFile.contentAsString == contentWithTemplateApplied) {
             readEntry(keyIdx, item, N) match {
               case e @ Right(x) =>
                 println(f"\t${key.formatted} => checkpoint: ok, #${x.key}"); e
@@ -297,7 +299,7 @@ object Reactor {
         val (executedFailures, executedResults) = runScripts.partitionMap { case ((_, idx), sink, _) =>
           // concat pbs outputs with the main one
           appendToAndDeleteIfExists(sink.dir / "log.pbs.txt", "# PBS output", sink.logFile)
-          appendToAndDeleteIfExists(sink.dir / "log.pbs.err.txt", "# PBS error", sink.errorFile)
+          appendToAndDeleteIfExists(sink.dir / "log.pbs.err.txt", "# PBS error", sink.logFile)
           readEntry(idx, sink, N)
         }
         val (skippedFailures, skippedResults) = skipped.partitionMap { case ((_, keyIdx), item, _) =>
@@ -374,7 +376,7 @@ object Reactor {
     val runnerInfoScript =
       """
         |hostname
-		|uname -a
+        |uname -a
         |lscpu
         |df -h
         |""".stripMargin
