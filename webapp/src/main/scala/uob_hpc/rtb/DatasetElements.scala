@@ -32,11 +32,17 @@ object DatasetElements {
       div(cls := "message-body", height   := 100.pct, padding := 0.px, paddingBottom := 16.px, body)
     )
 
-  def focusPanelHeader(key: Key, current: FocusGroup, navigate: FocusGroup => Binder[HtmlElement]) = Seq(
+  def focusPanelHeader(
+      key: Key,
+      extra: Option[String],
+      current: FocusGroup,
+      navigate: FocusGroup => Binder[HtmlElement]
+  ) = Seq(
     span(
       fontFamily := "monospace",
       fontSize   := 0.9.em,
-      s"${key.extra.map(s => s"[$s] ").getOrElse("")}${key.name}-${key.version} ${key.date.format(DateTimeFormatter.ISO_DATE)}"
+      s"${extra.fold("")(_ + " ")}${key.extra.map(s => s"[$s] ").getOrElse("")}${key.name}-${key.version} ${key.date
+        .format(DateTimeFormatter.ISO_DATE)}"
     ),
     div(
       cls        := "buttons has-addons ",
@@ -117,6 +123,15 @@ object DatasetElements {
         tr(
           td("Diff"),
           td(diff.getOrElse("N/A (initial data point)"))
+        ),
+        tr(
+          td("Download"),
+          td(
+            a(
+              s"$file.tar.xz",
+              href := s"https://github.com/uob-hpc/compiler-snapshots/releases/download/$file/$file.tar.xz"
+            )
+          )
         ),
         tr(
           td("Commits (", child.text <-- build.map(_.changes.size.toString), ")"),

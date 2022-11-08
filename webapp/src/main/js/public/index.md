@@ -9,9 +9,26 @@ this is interesting due to how complex C/C++ has become over the years.
 
 **Select a dataset on the top left ↖ to get started!**
 
-### Note on GCC performance/size
+### Known issues
 
-GCC's compiler time performance will be low (slower) unless the content of `gcc/DEV-PHASE` in the
+#### Snapshot Granularity
+
+The current snapshot binaries are compiled using GitHub Actions, as configured
+on [compiler-snapshots](https://github.com/UoB-HPC/compiler-snapshots).
+From 2017 to 2022, we have accumulated ~ 1131 weekly snapshots totaling 391GB of compressed
+binaries.
+
+We frequently see 100+ commits in a single week for LLVM and sometimes GCC, making this website not
+particularly useful for identifying a problematic commit.
+Ideally, we should be doing daily or even per-commit snapshots.
+However, if we switch to daily snapshots, the binary size instantly grows to 2.6TB: a number we
+suspect is against GitHub's ToS in some way.
+As such, we are currently surveying appropriate services for storing these binaries.
+
+#### Note on GCC performance/size
+
+Not really an issue per se, but GCC's compiler time performance will be low (slower) unless the
+content of `gcc/DEV-PHASE` in the
 repository is set to either `prerelease` or the empty string.
 This is usually done when a release is branched off with a proper version tag.
 For a concrete example,
@@ -55,7 +72,10 @@ Most of the chart is implemented from scratch directly in SVG.
 ### Source & Contact
 
 This repo is available at <https://github.com/UoB-HPC/rtb>.
-If you think something isn't right, please file an issue in the repo.
+Feel free to open an issue if you would like your compiler or job included in the benchmark.
+
+---
+
 
 The site is written by [Tom Lin](https://github.com/tom91136), as part of his PhD work at
 the [University of Bristol's High Performance

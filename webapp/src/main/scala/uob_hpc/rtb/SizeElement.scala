@@ -65,9 +65,10 @@ object SizeElement {
             children <-- page.map {
               case Page.Size(_, _, None) => Seq(span(" -- "))
               case page @ Page.Size(_, _, Some(state)) =>
-                val entry @ (key, _) = dataset.providers(state.index)
+                val (key, size) = dataset.providers(state.index)
                 DatasetElements.focusPanelHeader(
                   key,
+                  Some(f"${size.toDouble / 1000 / 1000}%.2f MB"),
                   state.group,
                   g => WebApp.navigateTo(page.copy(focus = Some(state.copy(group = g))))
                 )
@@ -84,26 +85,20 @@ object SizeElement {
                   case FocusGroup.Compiler =>
                     DatasetElements.focusCompilerPanel(dataset, dataset.providers(state.index)._1)
                   case FocusGroup.Output =>
-                    val (key, size) = dataset.providers(state.index)
-                    val file =
-                      s"${key.name}-${key.version}.${key.date.format(DateTimeFormatter.ISO_DATE)}Z.${key.extra.getOrElse("")}"
+                    val (_, size) = dataset.providers(state.index)
+
                     table(
                       cls             := "table",
                       backgroundColor := "transparent",
                       thead(),
                       tbody(
                         tr(
-                          td("Download"),
-                          td(
-                            a(
-                              s"$file.tar.xz",
-                              href := s"https://github.com/uob-hpc/compiler-snapshots/releases/download/$file/$file.tar.xz"
-                            )
-                          )
+                          td("Format"),
+                          td(code("XZ_OPT='-T0 -2' tar cfJ -C <binary>"))
                         ),
                         tr(
                           td("Size"),
-                          td(f"${size.toDouble / 1024 / 1024}%.2f MB (${size.toDouble / 1000 / 1000}%.2f MiB)")
+                          td(f"${size.toDouble / 1000 / 1000}%.2f MB (${size.toDouble / 1024 / 1024}%.2f MiB)")
                         )
                       )
                     )

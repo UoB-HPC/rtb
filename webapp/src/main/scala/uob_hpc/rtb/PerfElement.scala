@@ -62,7 +62,7 @@ object PerfElement {
             thead(
               tr(
                 th("Compilers", colSpan := compilers.size),
-                th("Jobs"),
+                th("Jobs (see [Job Info] for source)"),
                 th("Options")
               )
             ),
@@ -101,6 +101,7 @@ object PerfElement {
               case (page @ Page.Perf(_, _, Some(state)), xs) =>
                 DatasetElements.focusPanelHeader(
                   xs((state.job, state.name, state.version))(state.index).key,
+                  Some(state.job),
                   state.group,
                   g => WebApp.navigateTo(page.copy(focus = Some(state.copy(group = g))))
                 )
@@ -117,7 +118,6 @@ object PerfElement {
                 case (None, _) => span("Select a data point in the chart for details.", margin := 16.px)
                 case (Some(state), xs) =>
                   val element = xs((state.job, state.name, state.version))(state.index)
-                  println(element)
                   state.group match {
                     case FocusGroup.Compiler =>
                       DatasetElements.focusCompilerPanel(dataset, element.key)
@@ -153,7 +153,7 @@ object PerfElement {
                 dayWidth = state.scale.getOrElse(2d),
                 maxWidth = w,
                 maxHeight = h - 7,
-                yStep = 2,
+                yStep = 1,
                 series = xs,
                 groupLabelFn = { case (job, compiler, version) => s"$job ($compiler-$version)" },
                 groupLabelsFn = (xs, limit) =>
